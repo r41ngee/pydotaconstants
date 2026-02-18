@@ -1,0 +1,17 @@
+[project]
+name = "pydotaconstants"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "r41ngee", email = "r41ngee@yandex.ru" }
+]
+requires-python = ">=3.14"
+dependencies = []
+
+[project.scripts]
+pydotaconstants = "pydotaconstants:main"
+
+[build-system]
+requires = ["uv_build>=0.9.14,<0.10.0"]
+build-backend = "uv_build"
