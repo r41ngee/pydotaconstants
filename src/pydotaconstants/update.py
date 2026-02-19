@@ -70,5 +70,19 @@ def update():
     with open("src/pydotaconstants/data/abilities.json", "w") as wf:
         json.dump(ability_alldata, wf, indent=4)
 
+    # LOCALIZATION
+    LOCALS_DIR = "src/pydotaconstants/source_vdf/locals/"
+    locals_files = os.listdir(LOCALS_DIR)
+
+    locals_alldata = {}
+
+    for file in locals_files:
+        with open(LOCALS_DIR + file, encoding="utf-8") as rf:
+            data = vdf2.load(rf)["lang"]["Tokens"]
+            locals_alldata.update(data)
+
+    with open("src/pydotaconstants/data/locals.json", "w", encoding="utf-8") as wf:
+        json.dump(locals_alldata, wf, indent=4, ensure_ascii=False)
+
 if __name__ == "__main__":
     update()
