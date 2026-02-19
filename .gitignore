@@ -1,0 +1,19 @@
+# Virtual environments
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Distribution
+build/
+dist/
+*.egg-info/
+
+# uv
+uv.lock
+
+# vdf
+src/pydotaconstants/source_vdf
