@@ -14,3 +14,6 @@ dist/
 
 # uv
 uv.lock
+
+# vdf
+src/pydotaconstants/source_vdf
