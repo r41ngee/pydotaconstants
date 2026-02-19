@@ -1,6 +1,7 @@
 from copy import deepcopy
 import vdf2
 import json
+import os
 
 def update():
     # HEROES
@@ -50,6 +51,24 @@ def update():
 
         json.dump(data, wf, indent=4)
 
+    # ABILITIES
+    ABT_DIR = "src/pydotaconstants/source_vdf/abilities/"
+    ability_files = os.listdir(ABT_DIR)
+
+    ability_alldata = {}
+
+    for file in ability_files:
+        with open(ABT_DIR + file) as rf:
+            data = vdf2.load(rf)["DOTAAbilities"]
+        for ability in deepcopy(data):
+            if ability == "Version":
+                data.pop(ability)
+                continue
+
+        ability_alldata.update(data)
+
+    with open("src/pydotaconstants/data/abilities.json", "w") as wf:
+        json.dump(ability_alldata, wf, indent=4)
 
 if __name__ == "__main__":
     update()
