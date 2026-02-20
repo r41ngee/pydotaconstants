@@ -3,7 +3,7 @@ import vdf2
 import json
 import os
 
-def update():
+def _update():
     # HEROES
     H_KEY_LIST = [
         "Ability1",
@@ -85,4 +85,4 @@ def update():
         json.dump(locals_alldata, wf, indent=4, ensure_ascii=False)
 
 if __name__ == "__main__":
-    update()
+    _update()
