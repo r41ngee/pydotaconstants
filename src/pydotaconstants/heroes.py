@@ -1,4 +1,6 @@
+from typing import Self
 from ._core import _HEROES, _LOCALS
+import re
 
 class Hero():
     """Represents single hero data
@@ -42,7 +44,8 @@ class Hero():
         """
         return _LOCALS.get(self.name + ":n", "")
 
-    def getByName(name: str) -> Hero:
+    @classmethod
+    def getByName(cls, name: str) -> Self:
         """Get Hero object from hero codename
 
         Args:
@@ -53,7 +56,8 @@ class Hero():
         """        
         return Hero(name, _HEROES[name])
 
-    def getById(id: int | str) -> Hero:
+    @classmethod
+    def getById(cls, id: int | str) -> Self:
         """Get Hero object by HeroID
 
         Args:
@@ -74,3 +78,24 @@ class Hero():
                 return Hero(i, hero_kv)
 
         raise IndexError(f"ID {id} not found.")
+
+    @classmethod
+    def getByDisplayName(cls, displayName: str) -> Self:
+        """Get Hero object by display name
+
+        Args:
+            displayName (str): hero display name
+
+        Raises:
+            IndexError: incorrect display name
+
+        Returns:
+            Hero: Hero object
+        """        
+        for k in _LOCALS:
+            v = _LOCALS[k]
+            regex = re.compile(r"npc_dota_hero_[A-z_]+:n")
+            if regex.match(k) and v == displayName:
+                return Hero(k, _HEROES[k[:-2]])
+
+        raise IndexError(f"{displayName} - incorrect display name")
