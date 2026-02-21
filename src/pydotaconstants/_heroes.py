@@ -1,5 +1,5 @@
 from typing import Self
-from ._core import _HEROES, _LOCALS
+from ._loader import _HEROES, _LOCALS
 import re
 
 class Hero():
