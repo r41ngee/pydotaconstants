@@ -53,7 +53,7 @@ class Hero():
 
         Returns:
             Hero: Hero object
-        """        
+        """
         return Hero(name, _HEROES[name])
 
     @classmethod
@@ -80,7 +80,7 @@ class Hero():
         raise IndexError(f"ID {id} not found.")
 
     @classmethod
-    def getByDisplayName(cls, displayName: str) -> Self:
+    def getByDisplayName(cls, display_name: str) -> Self:
         """Get Hero object by display name
 
         Args:
@@ -91,11 +91,11 @@ class Hero():
 
         Returns:
             Hero: Hero object
-        """        
+        """
+        regex = re.compile(r"npc_dota_hero_[A-z_]+:n")
         for k in _LOCALS:
             v = _LOCALS[k]
-            regex = re.compile(r"npc_dota_hero_[A-z_]+:n")
-            if regex.match(k) and v == displayName:
+            if regex.match(k) and v == display_name:
                 return Hero(k, _HEROES[k[:-2]])
 
-        raise IndexError(f"{displayName} - incorrect display name")
+        raise IndexError(f"{display_name} - incorrect display name")
