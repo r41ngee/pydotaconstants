@@ -16,12 +16,6 @@ git clone https://github.com/yourusername/pydotaconstants.git
 cd pydotaconstants
 ```
 
-Make sure to run the `_update.py` script to generate the necessary data files if they are not already provided.
-
-```bash
-python src/_update.py
-```
-
 ## Basic Usage
 To use the library, you can import the desired classes and access hero or ability data as shown below:
 
