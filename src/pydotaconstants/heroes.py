@@ -8,6 +8,7 @@ class Hero():
     def __init__(self, name: str, kv: dict):
         self._name = name
         self._id = int(kv.get("HeroID", -1))
+        self._data = kv
 
     @property
     def name(self) -> str:
@@ -27,6 +28,10 @@ class Hero():
             int: Hero id
         """
         return self._id
+
+    @property
+    def data(self) -> dict:
+        return self._data
 
     @property
     def displayName(self) -> str:
