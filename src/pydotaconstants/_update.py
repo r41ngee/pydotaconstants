@@ -5,36 +5,6 @@ import pickle
 import os
 
 def _update():
-    # HEROES
-    H_KEY_LIST = [
-        "Ability1",
-        "Ability2",
-        "Ability3",
-        "Ability4",
-        "Ability5",
-        "Ability6",
-        "Ability7",
-        "Ability8",
-        "Ability9",
-        "HeroID",
-        "Facets",
-        "ArmorPhysical",
-        "AttackCapabilities",
-        "AttackDamageMin",
-        "AttackDamageMax",
-        "BaseAttackSpeed",
-        "AttackRate",
-        "AttackRange",
-        "AttributePrimary",
-        "AttributeBaseStrength",
-        "AttributeStrengthGain",
-        "AttributeBaseAgility",
-        "AttributeAgilityGain",
-        "AttributeBaseIntelligence",
-        "AttributeIntelligenceGain",
-        "MovementSpeed"
-    ]
-
     with open("src/pydotaconstants/source_vdf/npc_heroes.txt") as rf:
         data = vdf2.load(rf)
     heroes: dict = deepcopy(data["DOTAHeroes"])
@@ -42,9 +12,6 @@ def _update():
         if hero in ["Version", "npc_dota_hero_base"]:
             data["DOTAHeroes"].pop(hero)
             continue
-        for k in heroes[hero]:
-            if not k in H_KEY_LIST:
-                data["DOTAHeroes"][hero].pop(k)
     
     with open("src/pydotaconstants/data/heroes.json", "w") as wf:
         json.dump(data["DOTAHeroes"], wf, indent=4)
