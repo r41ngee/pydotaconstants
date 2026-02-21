@@ -18,4 +18,7 @@ uv.lock
 # vdf
 src/pydotaconstants/source_vdf
 
+#pickle
+*.pkl
+
 publish.ps1

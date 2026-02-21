@@ -1,6 +1,6 @@
 [project]
 name = "pydotaconstants"
-version = "0.3.2a2"
+version = "0.3.2"
 description = "Add your description here"
 readme = "README.md"
 authors = [
