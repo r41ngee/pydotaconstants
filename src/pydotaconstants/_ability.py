@@ -1,5 +1,5 @@
 from typing import Self
-from ._loader import _ABILITIES, _LOCALS
+from ._loader import _ABILITIES, LOCALS
 import re
 
 class Ability:
@@ -9,8 +9,8 @@ class Ability:
     def __init__(self, name: str, data: dict):
         self._name = name
         self._data = data
-        self._displayName = _LOCALS.get(name, "")
-        self._displayDescription = _LOCALS.get(name+"_Description", "")
+        self._displayName = LOCALS.get(name, "")
+        self._displayDescription = LOCALS.get(name+"_Description", "")
 
     @property
     def displayName(self) -> str:
@@ -78,8 +78,8 @@ class Ability:
         **CAN LEAD TO UNDEFINED BEHAVIOR WITH SPELLS WITH SAME NAMES (SHADOW SHAMAN's HEX AND LION's HEX)**
         """        
         regex = re.compile(r"npc_dota_hero_[A-z_]+:n")
-        for key in _LOCALS:
-            value = _LOCALS[key]
+        for key in LOCALS:
+            value = LOCALS[key]
             if (not regex.match(key)) and display_name == value:
                 return Ability(key, _ABILITIES[key])
 

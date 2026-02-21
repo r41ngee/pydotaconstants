@@ -1,5 +1,5 @@
 from typing import Self
-from ._loader import _HEROES, _LOCALS
+from ._loader import _HEROES, LOCALS
 import re
 
 class Hero():
@@ -42,7 +42,7 @@ class Hero():
         Returns:
             str: hero name. Returns empty string if incorrect codename
         """
-        return _LOCALS.get(self.name + ":n", "")
+        return LOCALS.get(self.name + ":n", "")
 
     @classmethod
     def getByName(cls, name: str) -> Self:
@@ -93,8 +93,8 @@ class Hero():
             Hero: Hero object
         """
         regex = re.compile(r"npc_dota_hero_[A-z_]+:n")
-        for k in _LOCALS:
-            v = _LOCALS[k]
+        for k in LOCALS:
+            v = LOCALS[k]
             if regex.match(k) and v == display_name:
                 return Hero(k, _HEROES[k[:-2]])
 
