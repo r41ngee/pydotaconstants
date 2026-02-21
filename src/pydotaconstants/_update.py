@@ -49,7 +49,7 @@ def _update():
                     print(hero)
                     print(k)
 
-        json.dump(data, wf, indent=4)
+        json.dump(data["DOTAHeroes"], wf, indent=4)
 
     # ABILITIES
     ABT_DIR = "src/pydotaconstants/source_vdf/abilities/"
