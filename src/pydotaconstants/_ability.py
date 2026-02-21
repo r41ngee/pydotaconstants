@@ -84,3 +84,12 @@ class Ability:
                 return Ability(key, _ABILITIES[key])
 
         raise IndexError(f"{display_name} - incorrect display name")
+
+    @classmethod
+    def all(cls) -> list[Self]:
+        result = []
+        for ability_name in _ABILITIES:
+            result.append(cls.getByName(ability_name))
+
+        return result
+    

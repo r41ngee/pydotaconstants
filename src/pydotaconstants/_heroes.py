@@ -99,3 +99,11 @@ class Hero():
                 return Hero(k, _HEROES[k[:-2]])
 
         raise IndexError(f"{display_name} - incorrect display name")
+
+    @classmethod
+    def all(cls) -> list[Self]:
+        result = []
+        for hero_name in _HEROES:
+            result.append(cls.getByName(hero_name))
+
+        return result
