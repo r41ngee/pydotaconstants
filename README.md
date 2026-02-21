@@ -9,7 +9,7 @@ PyDotaConstants is a Python library designed to provide structured access to Dot
 - Supports a structured schema for hero and ability data that can be easily navigated.
 
 ## Installation and Setup
-To install the PyDotaConstants library, simply clone the repository and ensure the necessary data files are in place. The current data files must be compiled as `.pkl` files as represented in the `src/pydotaconstants/data` directory. 
+To install the PyDotaConstants library, simply clone the repository and ensure the necessary data files are in place. The current data files are compiled as `.pkl` files and represented in the `src/pydotaconstants/data` directory. 
 
 ```bash
 git clone https://github.com/yourusername/pydotaconstants.git
@@ -32,7 +32,7 @@ print(ability.displayDescription)
 ```
 
 ## Configuration
-This library expects certain pre-compiled data files:
+This library contains certain pre-compiled data files:
 - `heroes.pkl`: Contains data for all Dota 2 heroes.
 - `abilities.pkl`: Contains data for all Dota 2 abilities.
 - `locals.pkl`: Contains localization strings for heroes and abilities.
@@ -41,7 +41,7 @@ Make sure these files are located in the `src/pydotaconstants/data` directory fo
 
 ## Contributing Guidelines
 Contributions to PyDotaConstants are welcome. To contribute:
-1. Fork the repository.
+1. Fork the [repository](https://github.com/r41ngee/pydotaconstants).
 2. Create a new branch (`git checkout -b feature-branch`).
 3. Make your changes and commit them (`git commit -m 'Add some feature'`).
 4. Push to the branch (`git push origin feature-branch`).
