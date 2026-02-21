@@ -7,9 +7,7 @@ authors = [
     { name = "r41ngee", email = "r41ngee@yandex.ru" }
 ]
 requires-python = ">=3.14"
-dependencies = [
-    "vdf2>=1.0.0",
-]
+dependencies = []
 
 [project.scripts]
 pydotaconstants = "pydotaconstants:main"
@@ -19,4 +17,6 @@ requires = ["uv_build>=0.9.14,<0.10.0"]
 build-backend = "uv_build"
 
 [dependency-groups]
-dev = []
+dev = [
+    "vdf2>=1.0.1",
+]
