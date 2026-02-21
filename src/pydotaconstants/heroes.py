@@ -1,20 +1,39 @@
-from ._core import HEROES, LOCALS
-_heroes = HEROES
+from ._core import _HEROES, _LOCALS
+_heroes = _HEROES
 
 
-def getById(id):
-    for hero in _heroes:
-        if hero["HeroID"] == id:
-            return hero
-    else:
-        raise IndexError("Incorrect ID.")
+class Hero():
+    """Represents single hero data
+    """
+    def __init__(self, name: str, kv: dict):
+        self._name = name
+        self._id = int(kv.get("HeroID", -1))
 
-def getDisplayName(hero_name: str | None = None, hero_id: int | None = None):
-    if hero_name:
-        pass
-    elif hero_id:
-        hero_name = getById(hero_id)
-    else:
-        raise TypeError(f"{getDisplayName.__name__} requires at least 1 argument")
+    @property
+    def name(self) -> str:
+        """Hero code name
+        example: npc_dota_hero_axe
 
-    return LOCALS[hero_name+":n"]
+        Returns:
+            str: hero code name
+        """
+        return self._name
+
+    @property
+    def id(self) -> int:
+        """Hero's HeroID
+
+        Returns:
+            int: Hero id
+        """
+        return self._id
+
+    @property
+    def displayName(self) -> str:
+        """Returns name of given hero
+        example: Axe
+
+        Returns:
+            str: hero name
+        """
+        return _LOCALS.get(self.name + ":n", "")
