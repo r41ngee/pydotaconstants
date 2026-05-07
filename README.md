@@ -38,8 +38,7 @@ This library contains certain pre-compiled data files:
 - `heroes.pkl`: Contains data for all Dota 2 heroes.
 - `abilities.pkl`: Contains data for all Dota 2 abilities.
 - `locals.pkl`: Contains localization strings for heroes and abilities.
-
-Make sure these files are located in the `src/pydotaconstants/data` directory for the library to function correctly.
+- `items.pkl`: Contains data for all Dota 2 items.
 
 ## Contributing Guidelines
 Contributions to PyDotaConstants are welcome. To contribute:
