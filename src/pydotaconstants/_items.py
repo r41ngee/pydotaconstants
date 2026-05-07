@@ -1,9 +1,9 @@
 from typing import Self
-from ._loader import _HEROES, LOCALS
+from ._loader import _HEROES, LOCALS, _ITEMS
 import re
 
-class Hero():
-    """Represents single hero data
+class Item():
+    """Represents single item data
     should not be created with constructor
     """
     def __init__(self, name: str, kv: dict):
@@ -13,22 +13,13 @@ class Hero():
 
     @property
     def name(self) -> str:
-        """Hero code name
-        example: npc_dota_hero_axe
+        """Item code name
+        example: item_blink
 
         Returns:
-            str: hero code name
+            str: item code name
         """
         return self._name
-
-    @property
-    def id(self) -> int:
-        """Hero's HeroID
-
-        Returns:
-            int: Hero id
-        """
-        return self._id
 
     @property
     def data(self) -> dict:
@@ -42,7 +33,7 @@ class Hero():
         Returns:
             str: hero name. Returns empty string if incorrect codename
         """
-        return LOCALS.get(self.name + ":n", "")
+        return LOCALS.get(self.name, "")
 
     @classmethod
     def getByName(cls, name: str) -> Self:
@@ -52,58 +43,35 @@ class Hero():
             name (str): hero codename
 
         Returns:
-            Hero: Hero object
+            Item: Item object
         """
-        return Hero(name, _HEROES[name])
-
-    @classmethod
-    def getById(cls, id: int | str) -> Self:
-        """Get Hero object by HeroID
-
-        Args:
-            id (int | str): HeroID
-
-        Raises:
-            IndexError: incorrect hero id
-
-
-        Returns:
-            Hero: Hero object
-        """
-        id = str(id)
-
-        for i in _HEROES:
-            hero_kv = _HEROES[i]
-            if hero_kv["HeroID"] == id:
-                return Hero(i, hero_kv)
-
-        raise IndexError(f"ID {id} not found.")
+        return Item(name, _ITEMS[name])
 
     @classmethod
     def getByDisplayName(cls, display_name: str) -> Self:
         """Get Hero object by display name
 
         Args:
-            displayName (str): hero display name
+            displayName (str): item display name
 
         Raises:
             IndexError: incorrect display name
 
         Returns:
-            Hero: Hero object
+            Item: Item object
         """
-        regex = re.compile(r"npc_dota_hero_[A-z_]+:n")
+        regex = re.compile(r"item_[A-z_]+:n")
         for k in LOCALS:
             v = LOCALS[k]
             if regex.match(k) and v == display_name:
-                return Hero(k, _HEROES[k[:-2]])
+                return Item(k, _ITEMS[k])
 
         raise IndexError(f"{display_name} - incorrect display name")
 
     @classmethod
     def all(cls) -> list[Self]:
         result = []
-        for hero_name in _HEROES:
-            result.append(cls.getByName(hero_name))
+        for item_name in _ITEMS:
+            result.append(cls.getByName(item_name))
 
         return result

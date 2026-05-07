@@ -8,4 +8,4 @@ with resources.files("pydotaconstants.data").joinpath("abilities.pkl").open("rb"
     _ABILITIES: dict = pickle.load(f)
 
 with resources.files("pydotaconstants.data").joinpath("locals.pkl").open("rb") as f:
-    _LOCALS: dict = pickle.load(f)
+    LOCALS: dict = pickle.load(f)

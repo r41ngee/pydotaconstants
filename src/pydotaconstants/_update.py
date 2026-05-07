@@ -18,6 +18,19 @@ def _update():
     with open("src/pydotaconstants/data/heroes.pkl", "wb") as pkl_f:
         pickle.dump(data["DOTAHeroes"], pkl_f)
 
+    with open("src/pydotaconstants/source_vdf/items.txt") as rf:
+        data = vdf2.load(rf)
+    items: dict = deepcopy(data["DOTAAbilities"])
+    for item in items:
+        if item in ["Version", "npc_dota_hero_base"]:
+            data["DOTAAbilities"].pop(item)
+            continue
+    
+    with open("src/pydotaconstants/data/items.json", "w") as wf:
+        json.dump(data["DOTAAbilities"], wf, indent=4)
+    with open("src/pydotaconstants/data/items.pkl", "wb") as pkl_f:
+        pickle.dump(data["DOTAAbilities"], pkl_f)
+
     # ABILITIES
     ABT_DIR = "src/pydotaconstants/source_vdf/abilities/"
     ability_files = os.listdir(ABT_DIR)
