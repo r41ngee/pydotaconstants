@@ -2,7 +2,7 @@
 
 PyDotaConstants is a Python library designed to provide structured access to Dota 2 hero and ability data. It allows developers to easily retrieve hero and ability information based on their code names and display names. This project is particularly useful for creating applications and tools that require detailed insights into Dota 2's capabilities and characters.
 
-## Current version - 7.41b
+## Current version - 7.41c
 
 ## Features
 - Retrieve hero information by codename, ID, or display name.
@@ -14,7 +14,7 @@ PyDotaConstants is a Python library designed to provide structured access to Dot
 To install the PyDotaConstants library, simply clone the repository and ensure the necessary data files are in place. The current data files are compiled as `.pkl` files and represented in the `src/pydotaconstants/data` directory. 
 
 ```bash
-git clone https://github.com/yourusername/pydotaconstants.git
+git clone https://github.com/r41ngee/pydotaconstants.git
 cd pydotaconstants
 ```
 
