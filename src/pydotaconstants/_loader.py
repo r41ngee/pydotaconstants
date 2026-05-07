@@ -9,3 +9,6 @@ with resources.files("pydotaconstants.data").joinpath("abilities.pkl").open("rb"
 
 with resources.files("pydotaconstants.data").joinpath("locals.pkl").open("rb") as f:
     LOCALS: dict = pickle.load(f)
+
+with resources.files("pydotaconstants.data").joinpath("items.pkl").open("rb") as f:
+    _ITEMS: dict = pickle.load(f)
