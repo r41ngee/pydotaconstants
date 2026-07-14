@@ -1,0 +1,138 @@
+.md-typeset table:not([class]) {
+    font-size: 0.82rem;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.data-table th {
+    background: var(--md-primary-fg-color);
+    color: var(--md-primary-bg-color);
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.data-table tr:hover {
+    background: var(--md-accent-fg-color--transparent);
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 16px;
+    margin-bottom: 16px;
+    border: 2px solid var(--md-default-fg-color--lightest);
+    border-radius: 8px;
+    font-size: 1rem;
+    background: var(--md-code-bg-color);
+    color: var(--md-default-fg-color);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--md-primary-fg-color);
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.card {
+    border: 1px solid var(--md-default-fg-color--lightest);
+    border-radius: 8px;
+    padding: 16px;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+}
+
+.card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.card-subtitle {
+    font-size: 0.85rem;
+    opacity: 0.7;
+    margin-bottom: 8px;
+}
+
+.card-body {
+    font-size: 0.9rem;
+}
+
+.json-view {
+    background: var(--md-code-bg-color);
+    border-radius: 8px;
+    padding: 16px;
+    overflow-x: auto;
+    font-size: 0.85rem;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--md-code-bg-color);
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 700px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.modal-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: var(--md-default-fg-color);
+}
+
+.count-badge {
+    display: inline-block;
+    background: var(--md-primary-fg-color);
+    color: var(--md-primary-bg-color);
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+}
