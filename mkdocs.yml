@@ -2,6 +2,7 @@ site_name: PyDotaConstants
 site_url: https://r41ngee.github.io/pydotaconstants/
 repo_url: https://github.com/r41ngee/pydotaconstants
 repo_name: r41ngee/pydotaconstants
+use_directory_urls: false
 
 theme:
   name: material
@@ -31,9 +32,9 @@ nav:
     - Abilities: api/abilities.md
     - Items: api/items.md
   - Data Browser:
-    - Heroes: data/heroes.html
-    - Abilities: data/abilities.html
-    - Items: data/items.html
+    - Heroes: data/heroes.md
+    - Abilities: data/abilities.md
+    - Items: data/items.md
 
 markdown_extensions:
   - pymdownx.highlight:

@@ -44,9 +44,9 @@ for hero in Hero.all():
 
 Browse the raw Dota 2 data directly:
 
-- [Heroes Browser](data/heroes.html)
-- [Abilities Browser](data/abilities.html)
-- [Items Browser](data/items.html)
+- [Heroes Browser](data/heroes.md)
+- [Abilities Browser](data/abilities.md)
+- [Items Browser](data/items.md)
 
 ## Configuration
 

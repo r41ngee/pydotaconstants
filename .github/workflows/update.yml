@@ -101,7 +101,7 @@ jobs:
                     items=$(jq 'length' src/pydotaconstants/data/items.json)
                     abilities=$(jq 'length' src/pydotaconstants/data/abilities.json)
                     echo "heroes=$heroes items=$items abilities=$abilities"
-                    if (( heroes < 120 || items < 100 || abilities < 1000 )); then
+                    if (( heroes < 120 || items < 500 || abilities < 1000 )); then
                         echo "::error::Build output looks incomplete (heroes=$heroes items=$items abilities=$abilities)"
                         exit 1
                     fi
