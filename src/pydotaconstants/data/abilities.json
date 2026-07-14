@@ -6,7 +6,6 @@
         "AbilityUnitDamageType": "DAMAGE_TYPE_MAGICAL",
         "SpellImmunityType": "SPELL_IMMUNITY_ENEMIES_NO",
         "SpellDispellableType": "SPELL_DISPELLABLE_YES",
-        "FightRecapLevel": "1",
         "AbilitySound": "Hero_Oracle.FortunesEnd.Target",
         "AbilityCastRange": "850",
         "AbilityCastPoint": "0",
