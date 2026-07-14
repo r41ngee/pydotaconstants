@@ -1,0 +1,27 @@
+name: Update
+
+on:
+    schedule:
+        - cron: '0 0/4 * * *'
+    workflow_dispatch:
+
+concurrency:
+  group: update-constants
+  cancel-in-progress: false
+
+jobs:
+    check:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v6
+            - name: 'Load d2vpkr'
+              run: |
+                    BASE="https://raw.githubusercontent.com/dotabuff/d2vpkr/master/dota"
+                    curl -s "$BASE/scripts/npc/npc_heroes.txt" -o "dota/scripts/npc/npc_heroes.txt"
+                    curl -sL 'https://api.github.com/repos/dotabuff/d2vpkr/contents/dota/scripts/npc/heroes' \
+                        | jq -r '.[].download_url'
+            - name: 'Setup uv'
+              uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990
+            - run: uv sync --frozen
+            - run: uv run _update.py
+                    
