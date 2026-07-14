@@ -34,7 +34,6 @@ jobs:
           echo "latest=$latest" >> "$GITHUB_OUTPUT"
           if [[ "$latest" != "$current" ]]; then
             echo "proceed=true" >> "$GITHUB_OUTPUT"
-            echo "new_d2vpkr=$latest" >> "$GITHUB_OUTPUT"
             echo "d2vpkr changed: $current -> $latest"
           else
             echo "proceed=false" >> "$GITHUB_OUTPUT"
@@ -98,7 +97,7 @@ jobs:
 
       - name: Commit and push if constants changed
         env:
-          LATEST: ${{ steps.check.outputs.new_d2vpkr }}
+          LATEST: ${{ steps.check.outputs.latest }}
         run: |
           set -euo pipefail
           git config user.name  'github-actions[bot]'
