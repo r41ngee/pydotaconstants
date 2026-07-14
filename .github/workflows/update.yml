@@ -28,7 +28,7 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             'https://api.github.com/repos/dotabuff/d2vpkr/commits/master' \
             | jq -r .sha)
-          current=$(cat d2vpkr_commit 2>/dev/null || echo "")
+          current=$(cat d2vpkr_commit.sha 2>/dev/null || echo "")
 
           echo "latest=$latest" >> "$GITHUB_OUTPUT"
           if [[ "$latest" != "$current" ]]; then
@@ -103,16 +103,16 @@ jobs:
 
           if git diff --quiet src/pydotaconstants/data/; then
             echo "No constant changes. Advancing d2vpkr tracker only."
-            echo "$LATEST" > d2vpkr_commit
-            if ! git diff --quiet -- d2vpkr_commit; then
-              git add d2vpkr_commit
+            echo "$LATEST" > d2vpkr_commit.sha
+            if ! git diff --quiet -- d2vpkr_commit.sha; then
+              git add d2vpkr_commit.sha
               git commit -m "chore: track d2vpkr ${LATEST} (no constant changes)"
               git push
             fi
             exit 0
           fi
 
-          echo "$LATEST" > d2vpkr_commit
+          echo "$LATEST" > d2vpkr_commit.sha
           git add -A
           git commit -m "Update constants from d2vpkr ${LATEST}"
           git push
