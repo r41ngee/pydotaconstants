@@ -30,6 +30,7 @@ jobs:
         if: |
             github.event_name == 'schedule' ||
             github.event_name == 'workflow_dispatch' ||
+            github.event_name == 'workflow_call' ||
             (github.event_name == 'issues' && contains(github.event.issue.labels.*.name, 'outdated-data')) ||
             (github.event_name == 'issue_comment' && github.event.comment.body == '/update')
         steps:
