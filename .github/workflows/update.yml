@@ -1,6 +1,7 @@
 name: Update Dota 2 constants
 
 on:
+    workflow_call:
     workflow_dispatch:
     schedule:
         - cron: "30 */2 * * *"
