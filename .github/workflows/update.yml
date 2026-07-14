@@ -21,7 +21,7 @@ concurrency:
 
 jobs:
   check:
-    name: Check for d2vpkr changes
+    name: Check
     runs-on: ubuntu-latest
     outputs:
         proceed: ${{ steps.check.outputs.proceed }}
@@ -114,7 +114,7 @@ jobs:
 
       - name: Commit and push if constants changed
         env:
-          LATEST: ${{ steps.check.outputs.latest }}
+          LATEST: ${{ needs.check.outputs.latest }}
         run: |
           set -euo pipefail
           git config user.name  'github-actions[bot]'
@@ -133,5 +133,5 @@ jobs:
 
           echo "$LATEST" > d2vpkr_commit.sha
           git add -A
-          git commit -m "Update constants from d2vpkr ${LATEST}"
+          git commit -m "chore: update constants d2vpkr-${LATEST}"
           git push
