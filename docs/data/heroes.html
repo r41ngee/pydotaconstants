@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heroes Browser — PyDotaConstants</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--md-text-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+            color: var(--md-default-fg-color, #333);
+            background: var(--md-bg-color, #fff);
+            padding: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 { font-size: 1.8rem; margin-bottom: 8px; }
+        .subtitle { color: #666; margin-bottom: 20px; }
+        .controls { margin-bottom: 20px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+        input[type="text"], select {
+            padding: 8px 14px; border: 2px solid #ddd; border-radius: 8px;
+            font-size: 0.95rem; background: var(--md-code-bg-color, #f5f5f5);
+            color: var(--md-default-fg-color, #333);
+        }
+        input[type="text"]:focus, select:focus { outline: none; border-color: #7b1fa2; }
+        input[type="text"] { flex: 1; min-width: 200px; }
+        .count { font-size: 0.9rem; color: #888; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+        .card {
+            border: 1px solid var(--md-default-fg-color--lightest, #e0e0e0);
+            border-radius: 10px; padding: 16px; cursor: pointer;
+            transition: box-shadow 0.2s, transform 0.15s;
+        }
+        .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); transform: translateY(-2px); }
+        .card-name { font-size: 1.15rem; font-weight: 700; margin-bottom: 2px; }
+        .card-id { font-size: 0.82rem; color: #999; margin-bottom: 6px; }
+        .card-meta { font-size: 0.85rem; color: #666; }
+        .role-tag {
+            display: inline-block; background: #ede7f6; color: #5e35b1;
+            padding: 2px 8px; border-radius: 4px; font-size: 0.78rem; margin: 2px;
+        }
+        .complexity { font-weight: 600; }
+        .complexity-1 { color: #43a047; }
+        .complexity-2 { color: #f9a825; }
+        .complexity-3 { color: #e53935; }
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: var(--md-code-bg-color, #fff); border-radius: 12px; padding: 24px;
+            max-width: 700px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative;
+        }
+        .modal-close {
+            position: absolute; top: 12px; right: 16px; font-size: 1.5rem;
+            cursor: pointer; background: none; border: none; color: var(--md-default-fg-color, #333);
+        }
+        .modal-content h2 { margin-bottom: 12px; }
+        .json-view {
+            background: var(--md-bg-color, #f5f5f5); border-radius: 8px; padding: 16px;
+            overflow-x: auto; font-size: 0.85rem; white-space: pre-wrap; word-break: break-word;
+        }
+        .empty { text-align: center; padding: 48px; color: #999; font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+    <h1>Heroes</h1>
+    <p class="subtitle">Browse all Dota 2 heroes from pydotaconstants data</p>
+    <div class="controls">
+        <input type="text" id="search" placeholder="Search by name or codename...">
+        <select id="role-filter"><option value="">All roles</option></select>
+        <select id="complexity-filter">
+            <option value="">All complexity</option>
+            <option value="1">★ Low</option>
+            <option value="2">★★ Medium</option>
+            <option value="3">★★★ High</option>
+        </select>
+        <span class="count" id="count"></span>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" style="display:none">No heroes match your search.</div>
+
+    <div class="modal-overlay" id="modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close">&times;</button>
+            <h2 id="modal-title"></h2>
+            <div class="json-view" id="modal-json"></div>
+        </div>
+    </div>
+
+    <script>
+    (async () => {
+        const res = await fetch('./heroes.json');
+        const raw = await res.json();
+        const localsRes = await fetch('./locals.json');
+        const locals = await localsRes.json();
+
+        const heroes = Object.entries(raw).map(([key, data]) => ({
+            codename: key,
+            id: parseInt(data.HeroID || -1),
+            displayName: locals[key + ':n'] || key,
+            role: data.Role || '',
+            complexity: parseInt(data.Complexity || 0),
+            data
+        })).sort((a, b) => a.displayName.localeCompare(b.displayName));
+
+        const roles = [...new Set(heroes.flatMap(h => h.role.split(',').map(r => r.trim()).filter(Boolean)))].sort();
+        const roleSelect = document.getElementById('role-filter');
+        roles.forEach(r => { const o = document.createElement('option'); o.value = r; o.textContent = r; roleSelect.appendChild(o); });
+
+        const grid = document.getElementById('grid');
+        const empty = document.getElementById('empty');
+        const countEl = document.getElementById('count');
+        const searchInput = document.getElementById('search');
+
+        function render() {
+            const q = searchInput.value.toLowerCase();
+            const role = roleSelect.value;
+            const complexity = document.getElementById('complexity-filter').value;
+            const filtered = heroes.filter(h => {
+                if (q && !h.displayName.toLowerCase().includes(q) && !h.codename.includes(q)) return false;
+                if (role && !h.role.includes(role)) return false;
+                if (complexity && h.complexity !== parseInt(complexity)) return false;
+                return true;
+            });
+            countEl.textContent = `${filtered.length} / ${heroes.length}`;
+            if (filtered.length === 0) { grid.innerHTML = ''; empty.style.display = ''; return; }
+            empty.style.display = 'none';
+            grid.innerHTML = filtered.map(h => `
+                <div class="card" data-codename="${h.codename}">
+                    <div class="card-name">${h.displayName}</div>
+                    <div class="card-id">${h.codename} · #${h.id}</div>
+                    <div class="card-meta">
+                        ${h.role.split(',').filter(Boolean).map(r => `<span class="role-tag">${r.trim()}</span>`).join('')}
+                        <span class="complexity complexity-${h.complexity}">${'★'.repeat(h.complexity)}</span>
+                    </div>
+                </div>
+            `).join('');
+            grid.querySelectorAll('.card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const h = heroes.find(x => x.codename === card.dataset.codename);
+                    document.getElementById('modal-title').textContent = h.displayName;
+                    document.getElementById('modal-json').textContent = JSON.stringify(h.data, null, 2);
+                    document.getElementById('modal').classList.add('active');
+                });
+            });
+        }
+
+        document.getElementById('modal-close').addEventListener('click', () => document.getElementById('modal').classList.remove('active'));
+        document.getElementById('modal').addEventListener('click', e => { if (e.target === e.currentTarget) e.target.classList.remove('active'); });
+        searchInput.addEventListener('input', render);
+        roleSelect.addEventListener('change', render);
+        document.getElementById('complexity-filter').addEventListener('change', render);
+        render();
+    })();
+    </script>
+</body>
+</html>
