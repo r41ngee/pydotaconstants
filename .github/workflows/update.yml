@@ -112,7 +112,7 @@ jobs:
             exit 1
           fi
 
-      - name: Add changes to index
+      - name: Commit and push if constants changed
         env:
           LATEST: ${{ steps.check.outputs.latest }}
         run: |
@@ -133,17 +133,5 @@ jobs:
 
           echo "$LATEST" > d2vpkr_commit.sha
           git add -A
-      - name: Get client ID
-        run: |
-            set -euo pipefail
-            curl -sSL https://raw.githubusercontent.com/dotabuff/d2vpkr/refs/heads/master/dota/steam.inf
-            | grep -E '^ClientId=' \
-            | cut -d= -f2 \
-            | tee client_id.txt
-      - name: Commit and push changes
-        env:
-            LATEST: $(cat client_id.txt)
-        run: |
-          set -euo pipefail
-          git commit -m "chore: update constants to ${LATEST}"
+          git commit -m "Update constants from d2vpkr ${LATEST}"
           git push
