@@ -93,9 +93,11 @@ jobs:
         with:
             enable-cache: true
 
-      - name: Install dependencies and run _update
+      - name: Install dependencies
         run: |
           uv sync
+      - name: Run update script
+        run: |
           uv run python src/pydotaconstants/_update.py
 
       - name: Validate build output
