@@ -3,7 +3,6 @@ name: CI
 on:
   push:
     branches: [main]
-  workflow_dispatch:
 
 permissions:
   contents: write
@@ -15,7 +14,26 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  check-pages-changes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Check for changes in the docs folder
+        continue-on-error: true
+        id: check_changes
+        run: |
+          git fetch origin main
+          git diff --exit-code origin/main -- docs || echo "Changes detected in the docs folder."
+
+      - name: Set output variable if changes are detected
+        if: steps.check_changes.outcome == 'failure'
+        run: echo "changes_detected=true" >> $GITHUB_ENV
+
   build-pages:
+    needs: [check-pages-changes, update-data]
+    if: needs.check-pages-changes.outputs.changes_detected == 'true' || needs.update-data.steps.check.outputs.proceed == 'true'
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
