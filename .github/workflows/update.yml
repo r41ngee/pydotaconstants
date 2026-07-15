@@ -1,4 +1,4 @@
-name: Update Dota 2 constants
+name: check&update
 
 on:
     workflow_call:
