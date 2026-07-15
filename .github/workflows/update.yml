@@ -161,3 +161,9 @@ jobs:
               with:
                     user: __token__
                     password: ${{ secrets.PYPI_API_TOKEN }}
+
+    update-pages:
+        name: Update GitHub Pages
+        needs: update
+        if: success()
+        uses: ./.github/workflows/pages.yml
