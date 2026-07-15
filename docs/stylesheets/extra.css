@@ -204,3 +204,19 @@
     color: #6a1b9a;
     font-weight: 600;
 }
+
+.specials {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.special-line {
+    font-size: 0.85rem;
+    margin-bottom: 2px;
+}
+
+.special-label {
+    font-weight: 600;
+    color: var(--md-primary-fg-color);
+}

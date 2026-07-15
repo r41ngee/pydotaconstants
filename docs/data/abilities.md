@@ -23,6 +23,7 @@ Browse all Dota 2 abilities from pydotaconstants data.
         <button class="modal-close" id="modal-close">&times;</button>
         <h2 id="modal-title"></h2>
         <div class="modal-sub" id="modal-sub"></div>
+        <div id="modal-desc"></div>
         <div class="json-view" id="modal-json"></div>
     </div>
 </div>
@@ -55,17 +56,53 @@ Browse all Dota 2 abilities from pydotaconstants data.
         return types;
     }
 
+    function resolveDesc(codename, rawDesc, abilityData) {
+        const av = abilityData.AbilityValues || {};
+        let desc = rawDesc.replace(/<[^>]+>/g, '');
+
+        desc = desc.replace(/%(\w+?)%+/g, (match, key) => {
+            const val = av[key];
+            if (!val) return match;
+            const num = typeof val === 'string' ? val : (val && val.value ? val.value : '');
+            if (!num) return match;
+            const isPct = match.endsWith('%%');
+            const formatted = num.split(' ').map(v => v && isPct ? v + '%' : v).filter(Boolean).join(' / ');
+            return formatted;
+        });
+
+        const specials = [];
+        for (const [key, val] of Object.entries(av)) {
+            const tipKey = 'DOTA_Tooltip_ability_' + codename + '_' + key;
+            if (locals[tipKey]) {
+                const num = typeof val === 'string' ? val : (val && val.value ? val.value : '');
+                const isPct = locals[tipKey].startsWith('%');
+                const label = isPct ? locals[tipKey].slice(1) : locals[tipKey];
+                const value = num.split(' ').map(v => v && isPct && !v.endsWith('%') ? v + '%' : v).filter(Boolean).join(' / ');
+                specials.push({ label, value });
+            }
+        }
+
+        return { desc, specials };
+    }
+
     const abilities = Object.entries(rawAbilities)
         .filter(([key, data]) => typeof data === 'object' && data.BaseClass !== 'special_bonus_base' && !key.startsWith('special_bonus_'))
-        .map(([key, data]) => ({
-            codename: key,
-            displayName: locals['DOTA_Tooltip_ability_' + key] || key,
-            description: (locals['DOTA_Tooltip_ability_' + key + '_Description'] || '').replace(/<[^>]+>/g, ''),
-            cooldown: data.AbilityCooldown || '—',
-            manaCost: data.AbilityManaCost || '—',
-            type: getAbilityTypes(data),
-            data
-        })).sort((a, b) => a.displayName.localeCompare(b.displayName));
+        .map(([key, data]) => {
+            const rawDesc = locals['DOTA_Tooltip_ability_' + key + '_Description'] || '';
+            const { desc, specials } = resolveDesc(key, rawDesc, data);
+            return {
+                codename: key,
+                displayName: locals['DOTA_Tooltip_ability_' + key] || '',
+                description: desc,
+                specials,
+                cooldown: data.AbilityCooldown ? data.AbilityCooldown.split(' ').filter(Boolean).join(' / ') : '—',
+                manaCost: data.AbilityManaCost ? data.AbilityManaCost.split(' ').filter(Boolean).join(' / ') : '—',
+                type: getAbilityTypes(data),
+                data
+            };
+        })
+        .filter(a => a.displayName)
+        .sort((a, b) => a.displayName.localeCompare(b.displayName));
 
     const grid = document.getElementById('grid');
     const empty = document.getElementById('empty');
@@ -103,6 +140,13 @@ Browse all Dota 2 abilities from pydotaconstants data.
                 const a = abilities.find(x => x.codename === card.dataset.codename);
                 document.getElementById('modal-title').textContent = a.displayName;
                 document.getElementById('modal-sub').textContent = a.codename;
+                let html = `<div class="card-desc">${a.description}</div>`;
+                if (a.specials.length) {
+                    html += '<div class="specials">' + a.specials.map(s =>
+                        `<div class="special-line"><span class="special-label">${s.label}</span> ${s.value}</div>`
+                    ).join('') + '</div>';
+                }
+                document.getElementById('modal-desc').innerHTML = html;
                 document.getElementById('modal-json').textContent = JSON.stringify(a.data, null, 2);
                 document.getElementById('modal').classList.add('active');
             });
