@@ -29,10 +29,10 @@ Browse all Dota 2 items from pydotaconstants data.
     const rawItems = await itemRes.json();
     const locals = await localsRes.json();
 
-    const items = Object.entries(rawItems).map(([key, data]) => ({
-        codename: key,
-        displayName: locals[key] || key,
-        cost: parseInt(data.ItemCost || 0),
+        const items = Object.entries(rawItems).map(([key, data]) => ({
+            codename: key,
+            displayName: locals['DOTA_Tooltip_Ability_' + key] || key,
+            cost: parseInt(data.ItemCost || 0),
         quality: data.ItemQuality || '',
         cooldown: data.AbilityCooldown || '—',
         manaCost: data.AbilityManaCost || '—',
@@ -62,7 +62,7 @@ Browse all Dota 2 items from pydotaconstants data.
         grid.innerHTML = filtered.map(i => `
             <div class="card" data-codename="${i.codename}">
                 <div class="card-name">${i.displayName}</div>
-                <div class="card-codename">${i.codename}</div>
+                ${i.displayName !== i.codename ? `<div class="card-codename">${i.codename}</div>` : ''}
                 <div class="card-meta">
                     ${i.cost ? `<span class="tag tag-cost">${i.cost}g</span>` : ''}
                     ${i.quality ? `<span class="tag">${i.quality}</span>` : ''}

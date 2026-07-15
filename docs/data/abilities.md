@@ -28,15 +28,17 @@ Browse all Dota 2 abilities from pydotaconstants data.
     const rawAbilities = await abilRes.json();
     const locals = await localsRes.json();
 
-    const abilities = Object.entries(rawAbilities).map(([key, data]) => ({
-        codename: key,
-        displayName: locals[key] || key,
-        description: (locals[key + '_Description'] || '').replace(/<[^>]+>/g, ''),
-        cooldown: data.AbilityCooldown || '—',
-        manaCost: data.AbilityManaCost || '—',
-        behavior: data.AbilityBehavior || '',
-        data
-    })).sort((a, b) => a.displayName.localeCompare(b.displayName));
+        const abilities = Object.entries(rawAbilities)
+            .filter(([key, data]) => data.BaseClass !== 'special_bonus_base' && !key.startsWith('special_bonus_'))
+            .map(([key, data]) => ({
+            codename: key,
+            displayName: locals['DOTA_Tooltip_ability_' + key] || key,
+            description: (locals['DOTA_Tooltip_ability_' + key + '_Description'] || '').replace(/<[^>]+>/g, ''),
+            cooldown: data.AbilityCooldown || '—',
+            manaCost: data.AbilityManaCost || '—',
+            behavior: data.AbilityBehavior || '',
+            data
+        })).sort((a, b) => a.displayName.localeCompare(b.displayName));
 
     const grid = document.getElementById('grid');
     const empty = document.getElementById('empty');
@@ -55,7 +57,7 @@ Browse all Dota 2 abilities from pydotaconstants data.
         grid.innerHTML = filtered.map(a => `
             <div class="card" data-codename="${a.codename}">
                 <div class="card-name">${a.displayName}</div>
-                <div class="card-codename">${a.codename}</div>
+                ${a.displayName !== a.codename ? `<div class="card-codename">${a.codename}</div>` : ''}
                 <div class="card-desc">${a.description.substring(0, 120)}${a.description.length > 120 ? '…' : ''}</div>
                 <div class="stat-row">
                     <span class="stat">CD: ${a.cooldown}</span>
