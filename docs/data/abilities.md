@@ -4,6 +4,14 @@ Browse all Dota 2 abilities from pydotaconstants data.
 
 <div class="controls">
     <input type="text" id="search" placeholder="Search by name or codename...">
+    <select id="type-filter">
+        <option value="">All types</option>
+        <option value="Active">Active</option>
+        <option value="Passive">Passive</option>
+        <option value="Toggle">Toggle</option>
+        <option value="Autocast">Autocast</option>
+        <option value="Innate">Innate</option>
+    </select>
     <span class="count" id="count"></span>
 </div>
 
@@ -28,15 +36,34 @@ Browse all Dota 2 abilities from pydotaconstants data.
     const rawAbilities = await abilRes.json();
     const locals = await localsRes.json();
 
-        const abilities = Object.entries(rawAbilities)
-            .filter(([key, data]) => data.BaseClass !== 'special_bonus_base' && !key.startsWith('special_bonus_'))
-            .map(([key, data]) => ({
+    const TYPE_CLASS = {
+        'Active': 'tag-active',
+        'Passive': 'tag-passive',
+        'Toggle': 'tag-toggle',
+        'Autocast': 'tag-autocast',
+        'Innate': 'tag-innate'
+    };
+
+    function getAbilityTypes(data) {
+        const types = [];
+        const b = data.AbilityBehavior || '';
+        if (b.includes('DOTA_ABILITY_BEHAVIOR_PASSIVE')) types.push('Passive');
+        else if (b.includes('DOTA_ABILITY_BEHAVIOR_TOGGLE')) types.push('Toggle');
+        else if (b.includes('DOTA_ABILITY_BEHAVIOR_AUTOCAST')) types.push('Autocast');
+        else types.push('Active');
+        if (data.Innate == 1) types.push('Innate');
+        return types;
+    }
+
+    const abilities = Object.entries(rawAbilities)
+        .filter(([key, data]) => typeof data === 'object' && data.BaseClass !== 'special_bonus_base' && !key.startsWith('special_bonus_'))
+        .map(([key, data]) => ({
             codename: key,
             displayName: locals['DOTA_Tooltip_ability_' + key] || key,
             description: (locals['DOTA_Tooltip_ability_' + key + '_Description'] || '').replace(/<[^>]+>/g, ''),
             cooldown: data.AbilityCooldown || '—',
             manaCost: data.AbilityManaCost || '—',
-            behavior: data.AbilityBehavior || '',
+            type: getAbilityTypes(data),
             data
         })).sort((a, b) => a.displayName.localeCompare(b.displayName));
 
@@ -47,8 +74,10 @@ Browse all Dota 2 abilities from pydotaconstants data.
 
     function render() {
         const q = searchInput.value.toLowerCase();
+        const type = document.getElementById('type-filter').value;
         const filtered = abilities.filter(a => {
             if (q && !a.displayName.toLowerCase().includes(q) && !a.codename.includes(q)) return false;
+            if (type && !a.type.includes(type)) return false;
             return true;
         });
         countEl.textContent = `${filtered.length} / ${abilities.length}`;
@@ -58,11 +87,15 @@ Browse all Dota 2 abilities from pydotaconstants data.
             <div class="card" data-codename="${a.codename}">
                 <div class="card-name">${a.displayName}</div>
                 ${a.displayName !== a.codename ? `<div class="card-codename">${a.codename}</div>` : ''}
-                <div class="card-desc">${a.description.substring(0, 120)}${a.description.length > 120 ? '…' : ''}</div>
-                <div class="stat-row">
-                    <span class="stat">CD: ${a.cooldown}</span>
-                    <span class="stat">Mana: ${a.manaCost}</span>
+                <div class="card-meta">
+                    ${a.type.map(t => `<span class="tag ${TYPE_CLASS[t] || ''}">${t}</span>`).join(' ')}
                 </div>
+                <div class="card-desc">${a.description.substring(0, 120)}${a.description.length > 120 ? '…' : ''}</div>
+                ${(a.cooldown !== '—' || a.manaCost !== '—') ? `
+                <div class="stat-row">
+                    ${a.cooldown !== '—' ? `<span class="stat">CD: ${a.cooldown}</span>` : ''}
+                    ${a.manaCost !== '—' ? `<span class="stat">Mana: ${a.manaCost}</span>` : ''}
+                </div>` : ''}
             </div>
         `).join('');
         grid.querySelectorAll('.card').forEach(card => {
@@ -79,6 +112,7 @@ Browse all Dota 2 abilities from pydotaconstants data.
     document.getElementById('modal-close').addEventListener('click', () => document.getElementById('modal').classList.remove('active'));
     document.getElementById('modal').addEventListener('click', e => { if (e.target === e.currentTarget) e.target.classList.remove('active'); });
     searchInput.addEventListener('input', render);
+    document.getElementById('type-filter').addEventListener('change', render);
     render();
 })();
 </script>

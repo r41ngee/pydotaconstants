@@ -174,3 +174,33 @@
     background: #e0f2f1;
     color: #00695c;
 }
+
+.tag-active {
+    background: #e8f5e9;
+    color: #2e7d32;
+    font-weight: 600;
+}
+
+.tag-passive {
+    background: #fff3e0;
+    color: #e65100;
+    font-weight: 600;
+}
+
+.tag-toggle {
+    background: #e3f2fd;
+    color: #1565c0;
+    font-weight: 600;
+}
+
+.tag-autocast {
+    background: #fce4ec;
+    color: #c62828;
+    font-weight: 600;
+}
+
+.tag-innate {
+    background: #f3e5f5;
+    color: #6a1b9a;
+    font-weight: 600;
+}

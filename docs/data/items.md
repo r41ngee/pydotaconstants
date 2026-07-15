@@ -66,7 +66,7 @@ Browse all Dota 2 items from pydotaconstants data.
                 <div class="card-meta">
                     ${i.cost ? `<span class="tag tag-cost">${i.cost}g</span>` : ''}
                     ${i.quality ? `<span class="tag">${i.quality}</span>` : ''}
-                    <span class="tag">CD: ${i.cooldown}</span>
+                    ${i.cooldown !== '—' ? `<span class="tag">CD: ${i.cooldown}</span>` : ''}
                 </div>
             </div>
         `).join('');
