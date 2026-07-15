@@ -80,12 +80,18 @@
 
 .json-view {
     background: var(--md-code-bg-color);
-    border-radius: 8px;
+    border: 1px solid var(--md-default-fg-color--lightest);
+    border-radius: 6px;
     padding: 16px;
     overflow-x: auto;
-    font-size: 0.85rem;
-    max-height: 400px;
+    font-size: 0.82rem;
+    font-family: var(--md-code-font-family, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace);
+    line-height: 1.5;
+    max-height: 500px;
     overflow-y: auto;
+    white-space: pre;
+    tab-size: 2;
+    color: var(--md-code-fg-color, inherit);
 }
 
 .modal-overlay {
@@ -114,6 +120,15 @@
     max-height: 80vh;
     overflow-y: auto;
     position: relative;
+}
+
+#modal-desc {
+    margin-bottom: 16px;
+}
+
+#modal-desc .card-desc {
+    margin-bottom: 12px;
+    line-height: 1.5;
 }
 
 .modal-close {
