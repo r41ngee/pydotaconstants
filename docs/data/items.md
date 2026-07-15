@@ -46,11 +46,11 @@ Browse all Dota 2 items from pydotaconstants data.
 
         const specials = [];
         for (const [key, val] of Object.entries(av)) {
-            const tipKey = 'DOTA_Tooltip_Ability_' + codename + '_' + key;
-            if (locals[tipKey]) {
+            const tipKey = locals['DOTA_Tooltip_Ability_' + codename + '_' + key] || locals['DOTA_Tooltip_ability_' + codename + '_' + key];
+            if (tipKey) {
                 const num = typeof val === 'string' ? val : (val && val.value ? val.value : '');
-                const isPct = locals[tipKey].startsWith('%');
-                const label = isPct ? locals[tipKey].slice(1) : locals[tipKey];
+                const isPct = tipKey.startsWith('%');
+                const label = isPct ? tipKey.slice(1) : tipKey;
                 const value = num && isPct && !num.endsWith('%') ? num + '%' : num;
                 specials.push({ label, value });
             }
@@ -62,7 +62,7 @@ Browse all Dota 2 items from pydotaconstants data.
     const items = Object.entries(rawItems)
         .filter(([_, data]) => typeof data === 'object')
         .map(([key, data]) => {
-            const rawDesc = locals['DOTA_Tooltip_Ability_' + key + '_Description'] || '';
+            const rawDesc = locals['DOTA_Tooltip_ability_' + key + '_Description'] || locals['DOTA_Tooltip_Ability_' + key + '_Description'] || '';
             const { desc, specials } = resolveDesc(key, rawDesc, data);
             return {
                 codename: key,
