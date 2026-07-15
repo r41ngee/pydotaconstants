@@ -30,38 +30,10 @@ jobs:
         if: steps.check_changes.outcome == 'failure'
         run: echo "changes_detected=true" >> $GITHUB_ENV
 
-  build-pages:
-    needs: [check-pages-changes, update-data]
-    if: needs.check-pages-changes.outputs.changes_detected == 'true' || needs.update-data.steps.check.outputs.proceed == 'true'
-
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-
-      - uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-
-      - run: uv sync
-
-      - name: Copy data files for data browser
-        run: cp src/pydotaconstants/data/heroes.json src/pydotaconstants/data/abilities.json src/pydotaconstants/data/items.json src/pydotaconstants/data/locals.json docs/data/
-
-      - run: uv run mkdocs build --strict
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: site/
-
-  deploy-pages:
-    needs: build-pages
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
-
   update-data:
     uses: ./.github/workflows/update.yml
+
+  update-pages:
+    needs: [check-pages-changes, update-data]
+    if: needs.check-pages-changes.outputs.changes_detected == 'true' || needs.update-data.outputs.data_updated == 'true'
+    uses: ./.github/workflows/pages.yml
