@@ -5,6 +5,7 @@ Browse all Dota 2 items from pydotaconstants data.
 <div class="controls">
     <input type="text" id="search" placeholder="Search by name or codename...">
     <select id="quality-filter"><option value="">All qualities</option></select>
+    <label class="recipe-toggle"><input type="checkbox" id="recipe-filter"> Show recipes</label>
     <span class="count" id="count"></span>
 </div>
 
@@ -100,9 +101,11 @@ Browse all Dota 2 items from pydotaconstants data.
     function render() {
         const q = searchInput.value.toLowerCase();
         const quality = qualitySelect.value;
+        const showRecipes = document.getElementById('recipe-filter').checked;
         const filtered = items.filter(i => {
             if (q && !i.displayName.toLowerCase().includes(q) && !i.codename.includes(q)) return false;
             if (quality && i.quality !== quality) return false;
+            if (!showRecipes && i.codename.startsWith('item_recipe_')) return false;
             return true;
         });
         countEl.textContent = `${filtered.length} / ${items.length}`;
@@ -149,6 +152,7 @@ Browse all Dota 2 items from pydotaconstants data.
     document.getElementById('modal').addEventListener('click', e => { if (e.target === e.currentTarget) e.target.classList.remove('active'); });
     searchInput.addEventListener('input', render);
     qualitySelect.addEventListener('change', render);
+    document.getElementById('recipe-filter').addEventListener('change', render);
     render();
 })();
 </script>
