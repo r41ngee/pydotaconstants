@@ -57,7 +57,12 @@ Browse all Dota 2 items from pydotaconstants data.
             if (tipKey) {
                 const num = typeof val === 'string' ? val : (val && val.value ? val.value : '');
                 const isPct = tipKey.startsWith('%');
-                const label = isPct ? tipKey.slice(1) : tipKey;
+                let label = isPct ? tipKey.slice(1) : tipKey;
+                const dollarMatch = label.match(/\+\$(\w+)/);
+                if (dollarMatch) {
+                    const varLabel = locals['dota_ability_variable_' + dollarMatch[1]];
+                    if (varLabel) label = label.replace(dollarMatch[0], '+ ' + varLabel.replace(/<[^>]+>/g, ''));
+                }
                 const value = num && isPct && !num.endsWith('%') ? num + '%' : num;
                 specials.push({ label, value });
             }
