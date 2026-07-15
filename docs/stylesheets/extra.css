@@ -235,3 +235,28 @@
     font-weight: 600;
     color: var(--md-primary-fg-color);
 }
+
+.card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    object-fit: contain;
+    float: left;
+    margin-right: 12px;
+    margin-bottom: 4px;
+    background: var(--md-code-bg-color);
+}
+
+.modal-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    background: var(--md-code-bg-color);
+}
+
+.card::after {
+    content: '';
+    display: table;
+    clear: both;
+}

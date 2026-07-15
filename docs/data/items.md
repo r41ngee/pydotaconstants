@@ -96,8 +96,10 @@ Browse all Dota 2 items from pydotaconstants data.
         countEl.textContent = `${filtered.length} / ${items.length}`;
         if (filtered.length === 0) { grid.innerHTML = ''; empty.style.display = ''; return; }
         empty.style.display = 'none';
+        const ITEM_IMG = 'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/';
         grid.innerHTML = filtered.map(i => `
             <div class="card" data-codename="${i.codename}">
+                <img class="card-icon" src="${ITEM_IMG}${i.codename.replace('item_', '')}.png" alt="${i.displayName}" onerror="this.style.display='none'">
                 <div class="card-name">${i.displayName}</div>
                 ${i.displayName !== i.codename ? `<div class="card-codename">${i.codename}</div>` : ''}
                 <div class="card-meta">
@@ -113,7 +115,7 @@ Browse all Dota 2 items from pydotaconstants data.
                 const i = items.find(x => x.codename === card.dataset.codename);
                 document.getElementById('modal-title').textContent = i.displayName;
                 document.getElementById('modal-sub').textContent = i.codename;
-                let html = '';
+                let html = `<img class="modal-icon" src="${ITEM_IMG}${i.codename.replace('item_', '')}.png" alt="${i.displayName}" onerror="this.style.display='none'">`;
                 if (i.description) html += `<div class="card-desc">${i.description}</div>`;
                 if (i.specials.length) {
                     html += '<div class="specials">' + i.specials.map(s =>

@@ -120,8 +120,10 @@ Browse all Dota 2 abilities from pydotaconstants data.
         countEl.textContent = `${filtered.length} / ${abilities.length}`;
         if (filtered.length === 0) { grid.innerHTML = ''; empty.style.display = ''; return; }
         empty.style.display = 'none';
+        const ABIL_IMG = 'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/abilities/';
         grid.innerHTML = filtered.map(a => `
             <div class="card" data-codename="${a.codename}">
+                <img class="card-icon" src="${ABIL_IMG}${a.codename}.png" alt="${a.displayName}" onerror="this.style.display='none'">
                 <div class="card-name">${a.displayName}</div>
                 ${a.displayName !== a.codename ? `<div class="card-codename">${a.codename}</div>` : ''}
                 <div class="card-meta">
@@ -140,7 +142,7 @@ Browse all Dota 2 abilities from pydotaconstants data.
                 const a = abilities.find(x => x.codename === card.dataset.codename);
                 document.getElementById('modal-title').textContent = a.displayName;
                 document.getElementById('modal-sub').textContent = a.codename;
-                let html = `<div class="card-desc">${a.description}</div>`;
+                let html = `<img class="modal-icon" src="${ABIL_IMG}${a.codename}.png" alt="${a.displayName}" onerror="this.style.display='none'"><div class="card-desc">${a.description}</div>`;
                 if (a.specials.length) {
                     html += '<div class="specials">' + a.specials.map(s =>
                         `<div class="special-line"><span class="special-label">${s.label}</span> ${s.value}</div>`
