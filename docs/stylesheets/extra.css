@@ -80,12 +80,18 @@
 
 .json-view {
     background: var(--md-code-bg-color);
-    border-radius: 8px;
+    border: 1px solid var(--md-default-fg-color--lightest);
+    border-radius: 6px;
     padding: 16px;
     overflow-x: auto;
-    font-size: 0.85rem;
-    max-height: 400px;
+    font-size: 0.82rem;
+    font-family: var(--md-code-font-family, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace);
+    line-height: 1.5;
+    max-height: 500px;
     overflow-y: auto;
+    white-space: pre;
+    tab-size: 2;
+    color: var(--md-code-fg-color, inherit);
 }
 
 .modal-overlay {
@@ -114,6 +120,15 @@
     max-height: 80vh;
     overflow-y: auto;
     position: relative;
+}
+
+#modal-desc {
+    margin-bottom: 16px;
+}
+
+#modal-desc .card-desc {
+    margin-bottom: 12px;
+    line-height: 1.5;
 }
 
 .modal-close {
@@ -173,4 +188,50 @@
 .tag-attack {
     background: #e0f2f1;
     color: #00695c;
+}
+
+.tag-active {
+    background: #e8f5e9;
+    color: #2e7d32;
+    font-weight: 600;
+}
+
+.tag-passive {
+    background: #fff3e0;
+    color: #e65100;
+    font-weight: 600;
+}
+
+.tag-toggle {
+    background: #e3f2fd;
+    color: #1565c0;
+    font-weight: 600;
+}
+
+.tag-autocast {
+    background: #fce4ec;
+    color: #c62828;
+    font-weight: 600;
+}
+
+.tag-innate {
+    background: #f3e5f5;
+    color: #6a1b9a;
+    font-weight: 600;
+}
+
+.specials {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.special-line {
+    font-size: 0.85rem;
+    margin-bottom: 2px;
+}
+
+.special-label {
+    font-weight: 600;
+    color: var(--md-primary-fg-color);
 }
