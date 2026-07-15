@@ -105,6 +105,7 @@ Browse all Dota 2 items from pydotaconstants data.
                     ${i.quality ? `<span class="tag">${i.quality}</span>` : ''}
                     ${i.cooldown !== '—' ? `<span class="tag">CD: ${i.cooldown}</span>` : ''}
                 </div>
+                ${i.description ? `<div class="card-desc">${i.description.substring(0, 120)}${i.description.length > 120 ? '…' : ''}</div>` : ''}
             </div>
         `).join('');
         grid.querySelectorAll('.card').forEach(card => {
