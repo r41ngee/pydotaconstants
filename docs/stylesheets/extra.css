@@ -126,9 +126,19 @@
     margin-bottom: 16px;
 }
 
+.card-desc {
+    font-size: 0.82rem;
+    line-height: 1.4;
+    opacity: 0.85;
+    max-height: 4.2em;
+    overflow: hidden;
+}
+
 #modal-desc .card-desc {
     margin-bottom: 12px;
     line-height: 1.5;
+    max-height: none;
+    overflow: visible;
 }
 
 .modal-close {
@@ -220,6 +230,15 @@
     font-weight: 600;
 }
 
+.recipe-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
 .specials {
     margin-top: 8px;
     padding-top: 8px;
@@ -234,4 +253,39 @@
 .special-label {
     font-weight: 600;
     color: var(--md-primary-fg-color);
+}
+
+.item-section {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-top: 10px;
+    color: var(--md-default-fg-color);
+}
+
+.item-section:first-child {
+    margin-top: 0;
+}
+
+.card-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 6px;
+    object-fit: contain;
+    background: var(--md-code-bg-color);
+    flex-shrink: 0;
+}
+
+.modal-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    background: var(--md-code-bg-color);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
 }

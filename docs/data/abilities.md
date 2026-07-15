@@ -58,7 +58,7 @@ Browse all Dota 2 abilities from pydotaconstants data.
 
     function resolveDesc(codename, rawDesc, abilityData) {
         const av = abilityData.AbilityValues || {};
-        let desc = rawDesc.replace(/<[^>]+>/g, '');
+        let desc = rawDesc;
 
         desc = desc.replace(/%(\w+?)%+/g, (match, key) => {
             const val = av[key];
@@ -69,6 +69,13 @@ Browse all Dota 2 abilities from pydotaconstants data.
             const formatted = num.split(' ').map(v => v && isPct ? v + '%' : v).filter(Boolean).join(' / ');
             return formatted;
         });
+
+        desc = desc.replace(/\\n/g, '\n');
+        desc = desc.replace(/\n{2,}/g, '\n');
+        desc = desc.replace(/<br\s*\/?>/gi, '\n');
+        desc = desc.replace(/<span[^>]*>/gi, '').replace(/<\/span>/gi, '');
+        desc = desc.replace(/<h1>(.*?)<\/h1>/gi, '<div class="item-section">$1</div>');
+        desc = desc.replace(/\n/g, '<br>');
 
         const specials = [];
         for (const [key, val] of Object.entries(av)) {
@@ -120,14 +127,21 @@ Browse all Dota 2 abilities from pydotaconstants data.
         countEl.textContent = `${filtered.length} / ${abilities.length}`;
         if (filtered.length === 0) { grid.innerHTML = ''; empty.style.display = ''; return; }
         empty.style.display = 'none';
+        const ABIL_IMG = 'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/abilities/';
+        window.abilImgError = function(el) { el.onerror = null; el.style.display = 'none'; };
         grid.innerHTML = filtered.map(a => `
             <div class="card" data-codename="${a.codename}">
-                <div class="card-name">${a.displayName}</div>
-                ${a.displayName !== a.codename ? `<div class="card-codename">${a.codename}</div>` : ''}
+                <div class="card-header">
+                    <img class="card-icon" src="${ABIL_IMG}${a.codename}.png" alt="${a.displayName}" onerror="abilImgError(this)">
+                    <div>
+                        <div class="card-name">${a.displayName}</div>
+                        ${a.displayName !== a.codename ? `<div class="card-codename">${a.codename}</div>` : ''}
+                    </div>
+                </div>
                 <div class="card-meta">
                     ${a.type.map(t => `<span class="tag ${TYPE_CLASS[t] || ''}">${t}</span>`).join(' ')}
                 </div>
-                <div class="card-desc">${a.description.substring(0, 120)}${a.description.length > 120 ? '…' : ''}</div>
+                <div class="card-desc">${a.description}</div>
                 ${(a.cooldown !== '—' || a.manaCost !== '—') ? `
                 <div class="stat-row">
                     ${a.cooldown !== '—' ? `<span class="stat">CD: ${a.cooldown}</span>` : ''}
@@ -140,7 +154,7 @@ Browse all Dota 2 abilities from pydotaconstants data.
                 const a = abilities.find(x => x.codename === card.dataset.codename);
                 document.getElementById('modal-title').textContent = a.displayName;
                 document.getElementById('modal-sub').textContent = a.codename;
-                let html = `<div class="card-desc">${a.description}</div>`;
+                let html = `<img class="modal-icon" src="${ABIL_IMG}${a.codename}.png" alt="${a.displayName}" onerror="this.onerror=null;this.style.display='none'"><div class="card-desc">${a.description}</div>`;
                 if (a.specials.length) {
                     html += '<div class="specials">' + a.specials.map(s =>
                         `<div class="special-line"><span class="special-label">${s.label}</span> ${s.value}</div>`

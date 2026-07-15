@@ -32,6 +32,7 @@ Browse all Dota 2 heroes from pydotaconstants data.
     <div class="modal-content">
         <button class="modal-close" id="modal-close">&times;</button>
         <h2 id="modal-title"></h2>
+        <div id="modal-desc"></div>
         <div class="json-view" id="modal-json"></div>
     </div>
 </div>
@@ -90,10 +91,16 @@ Browse all Dota 2 heroes from pydotaconstants data.
         countEl.textContent = `${filtered.length} / ${heroes.length}`;
         if (filtered.length === 0) { grid.innerHTML = ''; empty.style.display = ''; return; }
         empty.style.display = 'none';
+        const HERO_IMG = 'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/';
         grid.innerHTML = filtered.map(h => `
             <div class="card" data-codename="${h.codename}">
-                <div class="card-name">${h.displayName}</div>
-                <div class="card-id">${h.codename}</div>
+                <div class="card-header">
+                    <img class="card-icon" src="${HERO_IMG}${h.codename.replace('npc_dota_hero_', '')}.png" alt="${h.displayName}" onerror="this.style.display='none'">
+                    <div>
+                        <div class="card-name">${h.displayName}</div>
+                        <div class="card-id">${h.codename}</div>
+                    </div>
+                </div>
                 <div class="card-meta">
                     <span class="tag ${ATTR_CLASS[h.attribute] || ''}">${h.attribute}</span>
                     <span class="tag tag-attack">${h.attack}</span>
@@ -104,6 +111,8 @@ Browse all Dota 2 heroes from pydotaconstants data.
             card.addEventListener('click', () => {
                 const h = heroes.find(x => x.codename === card.dataset.codename);
                 document.getElementById('modal-title').textContent = h.displayName;
+                let modalHtml = `<img class="modal-icon" src="${HERO_IMG}${h.codename.replace('npc_dota_hero_', '')}.png" alt="${h.displayName}" onerror="this.style.display='none'">`;
+                document.getElementById('modal-desc').innerHTML = modalHtml;
                 document.getElementById('modal-json').textContent = JSON.stringify(h.data, null, 2);
                 document.getElementById('modal').classList.add('active');
             });

@@ -5,6 +5,7 @@ Browse all Dota 2 items from pydotaconstants data.
 <div class="controls">
     <input type="text" id="search" placeholder="Search by name or codename...">
     <select id="quality-filter"><option value="">All qualities</option></select>
+    <label class="recipe-toggle"><input type="checkbox" id="recipe-filter"> Show recipes</label>
     <span class="count" id="count"></span>
 </div>
 
@@ -32,7 +33,7 @@ Browse all Dota 2 items from pydotaconstants data.
 
     function resolveDesc(codename, rawDesc, itemData) {
         const av = itemData.AbilityValues || {};
-        let desc = rawDesc.replace(/<[^>]+>/g, '');
+        let desc = rawDesc;
 
         desc = desc.replace(/%(\w+?)%+/g, (match, key) => {
             const val = av[key];
@@ -44,13 +45,25 @@ Browse all Dota 2 items from pydotaconstants data.
             return formatted;
         });
 
+        desc = desc.replace(/\\n/g, '\n');
+        desc = desc.replace(/\n{2,}/g, '\n');
+        desc = desc.replace(/<br\s*\/?>/gi, '\n');
+        desc = desc.replace(/<span[^>]*>/gi, '').replace(/<\/span>/gi, '');
+        desc = desc.replace(/<h1>(.*?)<\/h1>/gi, '<div class="item-section">$1</div>');
+        desc = desc.replace(/\n/g, '<br>');
+
         const specials = [];
         for (const [key, val] of Object.entries(av)) {
-            const tipKey = 'DOTA_Tooltip_Ability_' + codename + '_' + key;
-            if (locals[tipKey]) {
+            const tipKey = locals['DOTA_Tooltip_Ability_' + codename + '_' + key] || locals['DOTA_Tooltip_ability_' + codename + '_' + key];
+            if (tipKey) {
                 const num = typeof val === 'string' ? val : (val && val.value ? val.value : '');
-                const isPct = locals[tipKey].startsWith('%');
-                const label = isPct ? locals[tipKey].slice(1) : locals[tipKey];
+                const isPct = tipKey.startsWith('%');
+                let label = isPct ? tipKey.slice(1) : tipKey;
+                const dollarMatch = label.match(/\+\$(\w+)/);
+                if (dollarMatch) {
+                    const varLabel = locals['dota_ability_variable_' + dollarMatch[1]];
+                    if (varLabel) label = label.replace(dollarMatch[0], '+ ' + varLabel.replace(/<[^>]+>/g, ''));
+                }
                 const value = num && isPct && !num.endsWith('%') ? num + '%' : num;
                 specials.push({ label, value });
             }
@@ -62,7 +75,7 @@ Browse all Dota 2 items from pydotaconstants data.
     const items = Object.entries(rawItems)
         .filter(([_, data]) => typeof data === 'object')
         .map(([key, data]) => {
-            const rawDesc = locals['DOTA_Tooltip_Ability_' + key + '_Description'] || '';
+            const rawDesc = locals['DOTA_Tooltip_ability_' + key + '_Description'] || locals['DOTA_Tooltip_Ability_' + key + '_Description'] || '';
             const { desc, specials } = resolveDesc(key, rawDesc, data);
             return {
                 codename: key,
@@ -88,24 +101,32 @@ Browse all Dota 2 items from pydotaconstants data.
     function render() {
         const q = searchInput.value.toLowerCase();
         const quality = qualitySelect.value;
+        const showRecipes = document.getElementById('recipe-filter').checked;
         const filtered = items.filter(i => {
             if (q && !i.displayName.toLowerCase().includes(q) && !i.codename.includes(q)) return false;
             if (quality && i.quality !== quality) return false;
+            if (!showRecipes && i.codename.startsWith('item_recipe_')) return false;
             return true;
         });
         countEl.textContent = `${filtered.length} / ${items.length}`;
         if (filtered.length === 0) { grid.innerHTML = ''; empty.style.display = ''; return; }
         empty.style.display = 'none';
+        const ITEM_IMG = 'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/';
         grid.innerHTML = filtered.map(i => `
             <div class="card" data-codename="${i.codename}">
-                <div class="card-name">${i.displayName}</div>
-                ${i.displayName !== i.codename ? `<div class="card-codename">${i.codename}</div>` : ''}
+                <div class="card-header">
+                    <img class="card-icon" src="${ITEM_IMG}${i.codename.replace('item_', '')}.png" alt="${i.displayName}" onerror="this.style.display='none'">
+                    <div>
+                        <div class="card-name">${i.displayName}</div>
+                        ${i.displayName !== i.codename ? `<div class="card-codename">${i.codename}</div>` : ''}
+                    </div>
+                </div>
                 <div class="card-meta">
                     ${i.cost ? `<span class="tag tag-cost">${i.cost}g</span>` : ''}
                     ${i.quality ? `<span class="tag">${i.quality}</span>` : ''}
                     ${i.cooldown !== '—' ? `<span class="tag">CD: ${i.cooldown}</span>` : ''}
                 </div>
-                ${i.description ? `<div class="card-desc">${i.description.substring(0, 120)}${i.description.length > 120 ? '…' : ''}</div>` : ''}
+                ${i.description ? `<div class="card-desc">${i.description}</div>` : ''}
             </div>
         `).join('');
         grid.querySelectorAll('.card').forEach(card => {
@@ -113,7 +134,7 @@ Browse all Dota 2 items from pydotaconstants data.
                 const i = items.find(x => x.codename === card.dataset.codename);
                 document.getElementById('modal-title').textContent = i.displayName;
                 document.getElementById('modal-sub').textContent = i.codename;
-                let html = '';
+                let html = `<img class="modal-icon" src="${ITEM_IMG}${i.codename.replace('item_', '')}.png" alt="${i.displayName}" onerror="this.style.display='none'">`;
                 if (i.description) html += `<div class="card-desc">${i.description}</div>`;
                 if (i.specials.length) {
                     html += '<div class="specials">' + i.specials.map(s =>
@@ -131,6 +152,7 @@ Browse all Dota 2 items from pydotaconstants data.
     document.getElementById('modal').addEventListener('click', e => { if (e.target === e.currentTarget) e.target.classList.remove('active'); });
     searchInput.addEventListener('input', render);
     qualitySelect.addEventListener('change', render);
+    document.getElementById('recipe-filter').addEventListener('change', render);
     render();
 })();
 </script>
