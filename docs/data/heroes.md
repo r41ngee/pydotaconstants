@@ -94,9 +94,13 @@ Browse all Dota 2 heroes from pydotaconstants data.
         const HERO_IMG = 'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/';
         grid.innerHTML = filtered.map(h => `
             <div class="card" data-codename="${h.codename}">
-                <img class="card-icon" src="${HERO_IMG}${h.codename.replace('npc_dota_hero_', '')}.png" alt="${h.displayName}" onerror="this.style.display='none'">
-                <div class="card-name">${h.displayName}</div>
-                <div class="card-id">${h.codename}</div>
+                <div class="card-header">
+                    <img class="card-icon" src="${HERO_IMG}${h.codename.replace('npc_dota_hero_', '')}.png" alt="${h.displayName}" onerror="this.style.display='none'">
+                    <div>
+                        <div class="card-name">${h.displayName}</div>
+                        <div class="card-id">${h.codename}</div>
+                    </div>
+                </div>
                 <div class="card-meta">
                     <span class="tag ${ATTR_CLASS[h.attribute] || ''}">${h.attribute}</span>
                     <span class="tag tag-attack">${h.attack}</span>

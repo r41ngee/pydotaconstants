@@ -99,9 +99,13 @@ Browse all Dota 2 items from pydotaconstants data.
         const ITEM_IMG = 'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/';
         grid.innerHTML = filtered.map(i => `
             <div class="card" data-codename="${i.codename}">
-                <img class="card-icon" src="${ITEM_IMG}${i.codename.replace('item_', '')}.png" alt="${i.displayName}" onerror="this.style.display='none'">
-                <div class="card-name">${i.displayName}</div>
-                ${i.displayName !== i.codename ? `<div class="card-codename">${i.codename}</div>` : ''}
+                <div class="card-header">
+                    <img class="card-icon" src="${ITEM_IMG}${i.codename.replace('item_', '')}.png" alt="${i.displayName}" onerror="this.style.display='none'">
+                    <div>
+                        <div class="card-name">${i.displayName}</div>
+                        ${i.displayName !== i.codename ? `<div class="card-codename">${i.codename}</div>` : ''}
+                    </div>
+                </div>
                 <div class="card-meta">
                     ${i.cost ? `<span class="tag tag-cost">${i.cost}g</span>` : ''}
                     ${i.quality ? `<span class="tag">${i.quality}</span>` : ''}

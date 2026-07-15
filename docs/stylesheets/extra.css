@@ -241,10 +241,8 @@
     height: 48px;
     border-radius: 6px;
     object-fit: contain;
-    float: left;
-    margin-right: 12px;
-    margin-bottom: 4px;
     background: var(--md-code-bg-color);
+    flex-shrink: 0;
 }
 
 .modal-icon {
@@ -255,8 +253,9 @@
     background: var(--md-code-bg-color);
 }
 
-.card::after {
-    content: '';
-    display: table;
-    clear: both;
+.card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 8px;
 }
