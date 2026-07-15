@@ -126,9 +126,19 @@
     margin-bottom: 16px;
 }
 
+.card-desc {
+    font-size: 0.82rem;
+    line-height: 1.4;
+    opacity: 0.85;
+    max-height: 4.2em;
+    overflow: hidden;
+}
+
 #modal-desc .card-desc {
     margin-bottom: 12px;
     line-height: 1.5;
+    max-height: none;
+    overflow: visible;
 }
 
 .modal-close {
@@ -234,6 +244,17 @@
 .special-label {
     font-weight: 600;
     color: var(--md-primary-fg-color);
+}
+
+.item-section {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-top: 10px;
+    color: var(--md-default-fg-color);
+}
+
+.item-section:first-child {
+    margin-top: 0;
 }
 
 .card-icon {

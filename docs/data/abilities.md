@@ -58,7 +58,7 @@ Browse all Dota 2 abilities from pydotaconstants data.
 
     function resolveDesc(codename, rawDesc, abilityData) {
         const av = abilityData.AbilityValues || {};
-        let desc = rawDesc.replace(/<[^>]+>/g, '');
+        let desc = rawDesc;
 
         desc = desc.replace(/%(\w+?)%+/g, (match, key) => {
             const val = av[key];
@@ -69,6 +69,13 @@ Browse all Dota 2 abilities from pydotaconstants data.
             const formatted = num.split(' ').map(v => v && isPct ? v + '%' : v).filter(Boolean).join(' / ');
             return formatted;
         });
+
+        desc = desc.replace(/\\n/g, '\n');
+        desc = desc.replace(/\n{2,}/g, '\n');
+        desc = desc.replace(/<br\s*\/?>/gi, '\n');
+        desc = desc.replace(/<span[^>]*>/gi, '').replace(/<\/span>/gi, '');
+        desc = desc.replace(/<h1>(.*?)<\/h1>/gi, '<div class="item-section">$1</div>');
+        desc = desc.replace(/\n/g, '<br>');
 
         const specials = [];
         for (const [key, val] of Object.entries(av)) {
@@ -134,7 +141,7 @@ Browse all Dota 2 abilities from pydotaconstants data.
                 <div class="card-meta">
                     ${a.type.map(t => `<span class="tag ${TYPE_CLASS[t] || ''}">${t}</span>`).join(' ')}
                 </div>
-                <div class="card-desc">${a.description.substring(0, 120)}${a.description.length > 120 ? '…' : ''}</div>
+                <div class="card-desc">${a.description}</div>
                 ${(a.cooldown !== '—' || a.manaCost !== '—') ? `
                 <div class="stat-row">
                     ${a.cooldown !== '—' ? `<span class="stat">CD: ${a.cooldown}</span>` : ''}

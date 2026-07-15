@@ -32,7 +32,7 @@ Browse all Dota 2 items from pydotaconstants data.
 
     function resolveDesc(codename, rawDesc, itemData) {
         const av = itemData.AbilityValues || {};
-        let desc = rawDesc.replace(/<[^>]+>/g, '');
+        let desc = rawDesc;
 
         desc = desc.replace(/%(\w+?)%+/g, (match, key) => {
             const val = av[key];
@@ -43,6 +43,13 @@ Browse all Dota 2 items from pydotaconstants data.
             const formatted = num.split(' ').map(v => v && isPct ? v + '%' : v).filter(Boolean).join(' / ');
             return formatted;
         });
+
+        desc = desc.replace(/\\n/g, '\n');
+        desc = desc.replace(/\n{2,}/g, '\n');
+        desc = desc.replace(/<br\s*\/?>/gi, '\n');
+        desc = desc.replace(/<span[^>]*>/gi, '').replace(/<\/span>/gi, '');
+        desc = desc.replace(/<h1>(.*?)<\/h1>/gi, '<div class="item-section">$1</div>');
+        desc = desc.replace(/\n/g, '<br>');
 
         const specials = [];
         for (const [key, val] of Object.entries(av)) {
@@ -111,7 +118,7 @@ Browse all Dota 2 items from pydotaconstants data.
                     ${i.quality ? `<span class="tag">${i.quality}</span>` : ''}
                     ${i.cooldown !== '—' ? `<span class="tag">CD: ${i.cooldown}</span>` : ''}
                 </div>
-                ${i.description ? `<div class="card-desc">${i.description.substring(0, 120)}${i.description.length > 120 ? '…' : ''}</div>` : ''}
+                ${i.description ? `<div class="card-desc">${i.description}</div>` : ''}
             </div>
         `).join('');
         grid.querySelectorAll('.card').forEach(card => {
