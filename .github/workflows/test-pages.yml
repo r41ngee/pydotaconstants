@@ -1,3 +1,5 @@
+name: Test Pages r buildable
+
 on:
   workflow_dispatch:
   workflow_call:

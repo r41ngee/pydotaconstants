@@ -1,3 +1,5 @@
+name: Schedule checker
+
 on:
   schedule:
     - cron: "30 */2 * * *"
@@ -22,5 +24,6 @@ jobs:
 
   update-pages:
     needs: check-update
-    if: needs.check-update.proceeds == 'true' || needs.check-update.outputs.data_updated == 'true'
+    if: needs.check-update.jobs.rebuild-constants.result == 'success'
+    name: Update pages
     uses: ./.github/workflows/pages.yml
