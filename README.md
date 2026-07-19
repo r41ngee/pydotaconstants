@@ -52,3 +52,5 @@ Please ensure any new features include tests and documentation updates as necess
 
 ## License
 This project is licensed under the MIT License. See the `LICENSE` file for more details.
+
+**SPECIAL THANKS TO https://github.com/dotabuff/d2vpkr**
