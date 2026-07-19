@@ -1,0 +1,22 @@
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/cache@v4
+        with:
+          path: site/**
+          key: ${{ runner.os }}-pages-${{ github.sha }}
+
+      - if: steps.cache.outputs.cache-hit != 'true'
+        uses: actions/checkout@v5
+
+      - uses: astral-sh/setup-uv@v5
+
+      - run: uv sync
+
+      - run: uv run mkdocs build --strict
+            
