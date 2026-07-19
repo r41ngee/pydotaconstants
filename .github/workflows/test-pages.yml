@@ -18,6 +18,10 @@ jobs:
           path: site/**
           key: ${{ runner.os }}-pages-${{ github.sha }}
 
+      - name: Copy data files for data browser
+        run: cp src/pydotaconstants/data/heroes.json src/pydotaconstants/data/abilities.json src/pydotaconstants/data/items.json src/pydotaconstants/data/locals.json docs/data/
+        if: steps.cache.outputs.cache-hit != 'true'
+
       - if: steps.cache.outputs.cache-hit != 'true'
         run: uv run mkdocs build --strict
             
