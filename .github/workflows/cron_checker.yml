@@ -8,13 +8,13 @@ on:
     types: [opened, labeled]
   issue_comment:
     types: [created]
+  workflow_dispatch:
 
 jobs:
   check-update:
     name: Check & update
     uses: ./.github/workflows/update.yml
 
-  
   update-pages:
     needs: check-update
     if: needs.check-update.proceeds == 'true' || needs.check-update.outputs.data_updated == 'true'
