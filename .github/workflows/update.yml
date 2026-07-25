@@ -20,13 +20,6 @@ jobs:
         outputs:
             proceed: ${{ steps.check.outputs.proceed }}
             latest: ${{ steps.check.outputs.latest }}
-        if: |
-            github.event_name == 'schedule' ||
-            github.event_name == 'workflow_dispatch' ||
-            github.event_name == 'workflow_call' ||
-            github.event_name == 'push' ||
-            (github.event_name == 'issues' && contains(github.event.issue.labels.*.name, 'outdated-data')) ||
-            (github.event_name == 'issue_comment' && github.event.comment.body == '/update')
         steps:
             - uses: actions/checkout@v5
             - name: Check d2vpkr for new commits
