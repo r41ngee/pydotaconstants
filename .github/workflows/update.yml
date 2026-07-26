@@ -26,10 +26,7 @@ jobs:
               id: check
               run: |
                     set -euo pipefail
-                    latest=$(curl -sSf --retry 3 \
-                        -H "Accept: application/vnd.github+json" \
-                        'https://api.github.com/repos/dotabuff/d2vpkr/commits/master' \
-                        | jq -r .sha)
+                    latest=$(gh api repos/dotabuff/d2vpkr/commits/master --jq .sha)
                     current=$(cat d2vpkr_commit.sha 2>/dev/null || echo "")
 
                     echo "latest=$latest" >> "$GITHUB_OUTPUT"
@@ -66,7 +63,7 @@ jobs:
                     curl -sL -o src/pydotaconstants/source_vdf/locals/dota_english.txt \
                         "$BASE/resource/localization/dota_english.txt"
 
-                    curl -sL 'https://api.github.com/repos/dotabuff/d2vpkr/contents/dota/scripts/npc/heroes' \
+                    gh api repos/dotabuff/d2vpkr/contents/dota/scripts/npc/heroes \
                         | jq -r '.[].download_url' \
                         | while read -r url; do
                             name=$(basename "$url")
