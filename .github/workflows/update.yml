@@ -20,6 +20,8 @@ jobs:
         outputs:
             proceed: ${{ steps.check.outputs.proceed }}
             latest: ${{ steps.check.outputs.latest }}
+        env:
+            GH_TOKEN: ${{ github.token }}
         steps:
             - uses: actions/checkout@v5
             - name: Check d2vpkr for new commits
