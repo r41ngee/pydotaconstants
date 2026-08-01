@@ -112,14 +112,20 @@ jobs:
                         fi
 
                         echo "$LATEST" > d2vpkr_commit.sha
+                        uv version --bump post
                         git add -A
                         git commit -m "Update constants from d2vpkr ${LATEST}"
                         git push
-            - name: Upload build artifacts
-              uses: actions/upload-artifact@v7
+
+    publish:
+        needs: update
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7
+            - uses: astral-sh/setup-uv@v5
               with:
-                    name: pydotaconstants-build
-                    path: .
+                  enable-cache: true
+            - run: uv publish --token ${{ secrets.PYPI_TOKEN }}
 
     report:
         name: Report
