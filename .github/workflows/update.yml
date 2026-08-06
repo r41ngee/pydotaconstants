@@ -119,6 +119,7 @@ jobs:
                     uv version --bump post
 
                     PATCH = $(curl https://www.dota2.com/datafeed/patchnoteslist | jq ".patches[-1].patch_name" --raw-output)
+                    echo "$PATCH" > current_patch.md
 
                     git add -A
                     git commit -m "patch(${PATCH}): update constants from d2vpkr ${LATEST}"
