@@ -47,6 +47,8 @@ jobs:
         if: needs.check.outputs.proceed == 'true'
         env:
             GH_TOKEN: ${{ github.token }}
+        outputs:
+            changes: ${{ steps.push.outputs.changes }}
         steps:
             - uses: actions/checkout@v5
             - name: Download VDF files from d2vpkr
@@ -93,6 +95,7 @@ jobs:
                         exit 1
                     fi
             - name: Commit and push if constants changed
+              id: push
               env:
                   LATEST: ${{ needs.check.outputs.latest }}
               run: |
@@ -108,18 +111,21 @@ jobs:
                             git commit -m "chore: track d2vpkr ${LATEST} (no constant changes)"
                             git push
                         fi
-                            exit 0
-                        fi
+                        echo "changes=false" >> $GITHUB_OUTPUT
+                        exit 0
+                    fi
 
-                        echo "$LATEST" > d2vpkr_commit.sha
-                        uv version --bump post
-                        git add -A
-                        git commit -m "Update constants from d2vpkr ${LATEST}"
-                        git push
+                    echo "$LATEST" > d2vpkr_commit.sha
+                    uv version --bump post
+                    git add -A
+                    git commit -m "Update constants from d2vpkr ${LATEST}"
+                    git push
+                    echo "changes=true" >> $GITHUB_OUTPUT
 
     publish:
         needs: update
         runs-on: ubuntu-latest
+        if: needs.update.outputs.changes == 'true'
         steps:
             - uses: actions/checkout@v7
             - uses: astral-sh/setup-uv@v5
