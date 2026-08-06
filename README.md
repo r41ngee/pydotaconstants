@@ -2,7 +2,7 @@
 
 PyDotaConstants is a Python library designed to provide structured access to Dota 2 hero and ability data. It allows developers to easily retrieve hero and ability information based on their code names and display names. This project is particularly useful for creating applications and tools that require detailed insights into Dota 2's capabilities and characters.
 
-## [Current patch](current_patch.txt)
+## [Current patch (Github only)](current_patch.txt)
 
 ## Features
 - Retrieve hero information by codename, ID, or display name.
@@ -53,4 +53,8 @@ Please ensure any new features include tests and documentation updates as necess
 ## License
 This project is licensed under the MIT License. See the `LICENSE` file for more details.
 
-**SPECIAL THANKS TO https://github.com/dotabuff/d2vpkr**
+## Links
+- [Github](https://github.com/r41ngee/pydotaconstants)
+- [PyPi](https://pypi.org/project/pydotaconstants/)
+
+**This project is runs with help of [dotabuff/d2vpkr](https://github.com/dotabuff/d2vpkr)**
