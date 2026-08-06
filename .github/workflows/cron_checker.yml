@@ -8,6 +8,9 @@ on:
       timezone: "Europe/Moscow"
   workflow_dispatch:
 
+concurrency:
+  group: update-constants
+
 permissions:
   contents: write
   pages: write
@@ -17,9 +20,3 @@ jobs:
   check-update:
     name: Check & update
     uses: ./.github/workflows/update.yml
-
-  update-pages:
-    needs: check-update
-    if: needs.check-update.jobs.rebuild-constants.result == 'success'
-    name: Update pages
-    uses: ./.github/workflows/pages.yml
