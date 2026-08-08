@@ -12,6 +12,8 @@ def _update():
         if hero in ["Version", "npc_dota_hero_base"]:
             data["DOTAHeroes"].pop(hero)
             continue
+
+    heroes = sorted(heroes)
     
     with open("src/pydotaconstants/data/heroes.json", "w") as wf:
         json.dump(data["DOTAHeroes"], wf, indent=4)
@@ -25,6 +27,8 @@ def _update():
         if item in ["Version", "npc_dota_hero_base"]:
             data["DOTAAbilities"].pop(item)
             continue
+
+    items = sorted(items)
     
     with open("src/pydotaconstants/data/items.json", "w") as wf:
         json.dump(data["DOTAAbilities"], wf, indent=4)
@@ -47,6 +51,8 @@ def _update():
 
         ability_alldata.update(data)
 
+    ability_alldata = sorted(ability_alldata)
+
     with open("src/pydotaconstants/data/abilities.json", "w") as wf:
         json.dump(ability_alldata, wf, indent=4)
     with open("src/pydotaconstants/data/abilities.pkl", "wb") as wf:
@@ -62,6 +68,8 @@ def _update():
         with open(LOCALS_DIR + file, encoding="utf-8") as rf:
             data = vdf2.load(rf)["lang"]["Tokens"]
             locals_alldata.update(data)
+
+    locals_alldata = sorted(locals_alldata)
 
     with open("src/pydotaconstants/data/locals.json", "w", encoding="utf-8") as wf:
         json.dump(locals_alldata, wf, indent=4, ensure_ascii=False)
