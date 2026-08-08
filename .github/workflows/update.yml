@@ -140,6 +140,7 @@ jobs:
             - uses: astral-sh/setup-uv@v5
               with:
                   enable-cache: true
+            - run: uv build
             - run: uv publish --token ${{ secrets.PYPI_TOKEN }}
 
     report:
