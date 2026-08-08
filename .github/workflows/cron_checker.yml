@@ -8,9 +8,6 @@ on:
       timezone: "Europe/Moscow"
   workflow_dispatch:
 
-concurrency:
-  group: update-constants
-
 permissions:
   contents: write
   pages: write
