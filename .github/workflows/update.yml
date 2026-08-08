@@ -2,6 +2,11 @@ name: check&update
 
 on:
     workflow_call:
+    schedule:
+        - cron: "30 */2 * * *"
+          timezone: "Europe/Moscow"
+        - cron: "30 0-4,22-23 * * MON-FRI"
+          timezone: "Europe/Moscow"
     workflow_dispatch:
 
 permissions:
@@ -118,7 +123,7 @@ jobs:
                     echo "$LATEST" > d2vpkr_commit.sha
                     uv version --bump post
 
-                    PATCH = $(curl https://www.dota2.com/datafeed/patchnoteslist | jq ".patches[-1].patch_name" --raw-output)
+                    PATCH=$(curl https://www.dota2.com/datafeed/patchnoteslist | jq ".patches[-1].patch_name" --raw-output)
                     echo "$PATCH" > current_patch.md
 
                     git add -A
