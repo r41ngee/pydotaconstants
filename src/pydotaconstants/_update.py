@@ -13,12 +13,12 @@ def _update():
             data["DOTAHeroes"].pop(hero)
             continue
 
-    heroes = sorted(heroes)
+    heroes = dict(sorted(heroes.items()))
     
     with open("src/pydotaconstants/data/heroes.json", "w") as wf:
-        json.dump(data["DOTAHeroes"], wf, indent=4)
+        json.dump(heroes, wf, indent=4)
     with open("src/pydotaconstants/data/heroes.pkl", "wb") as pkl_f:
-        pickle.dump(data["DOTAHeroes"], pkl_f)
+        pickle.dump(heroes, pkl_f)
 
     with open("src/pydotaconstants/source_vdf/items.txt") as rf:
         data = vdf2.load(rf)
@@ -28,12 +28,12 @@ def _update():
             data["DOTAAbilities"].pop(item)
             continue
 
-    items = sorted(items)
+    items = dict(sorted(items.items()))
     
     with open("src/pydotaconstants/data/items.json", "w") as wf:
-        json.dump(data["DOTAAbilities"], wf, indent=4)
+        json.dump(items, wf, indent=4)
     with open("src/pydotaconstants/data/items.pkl", "wb") as pkl_f:
-        pickle.dump(data["DOTAAbilities"], pkl_f)
+        pickle.dump(items, pkl_f)
 
     # ABILITIES
     ABT_DIR = "src/pydotaconstants/source_vdf/abilities/"
@@ -51,7 +51,7 @@ def _update():
 
         ability_alldata.update(data)
 
-    ability_alldata = sorted(ability_alldata)
+    ability_alldata = dict(sorted(ability_alldata.items()))
 
     with open("src/pydotaconstants/data/abilities.json", "w") as wf:
         json.dump(ability_alldata, wf, indent=4)
@@ -69,7 +69,7 @@ def _update():
             data = vdf2.load(rf)["lang"]["Tokens"]
             locals_alldata.update(data)
 
-    locals_alldata = sorted(locals_alldata)
+    locals_alldata = dict(sorted(locals_alldata.items()))
 
     with open("src/pydotaconstants/data/locals.json", "w", encoding="utf-8") as wf:
         json.dump(locals_alldata, wf, indent=4, ensure_ascii=False)
