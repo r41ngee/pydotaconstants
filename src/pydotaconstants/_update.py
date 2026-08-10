@@ -45,7 +45,9 @@ def _update():
         with open(ABT_DIR + file) as rf:
             data = vdf2.load(rf)["DOTAAbilities"]
         for ability in deepcopy(data):
-            if ability == "Version":
+            # WAIT FOR FIX RANDOM KEYS IN npc_dota_hero_meepo
+            # I <3 GABEN
+            if ability == "Version" or ability == "AbilityCastPoint" or ability == "AbilityCastAnimation":
                 data.pop(ability)
                 continue
 
@@ -66,7 +68,8 @@ def _update():
 
     for file in locals_files:
         with open(LOCALS_DIR + file, encoding="utf-8") as rf:
-            data = vdf2.load(rf)["lang"]["Tokens"]
+            data = vdf2.load(rf)
+            data = data["lang"]["Tokens"]
             locals_alldata.update(data)
 
     locals_alldata = dict(sorted(locals_alldata.items()))
