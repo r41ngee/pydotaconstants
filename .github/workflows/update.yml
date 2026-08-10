@@ -139,6 +139,9 @@ jobs:
             - uses: astral-sh/setup-uv@v5
               with:
                   enable-cache: true
+            - run: |
+                git fetch
+                git pull
             - run: uv build
             - run: uv publish --token ${{ secrets.PYPI_TOKEN }}
 
