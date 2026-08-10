@@ -1,5 +1,4 @@
 {
-    "Version": "1",
     "item_abyssal_blade": {
         "AbilityBehavior": "DOTA_ABILITY_BEHAVIOR_UNIT_TARGET",
         "AbilityUnitTargetTeam": "DOTA_UNIT_TARGET_TEAM_ENEMY",

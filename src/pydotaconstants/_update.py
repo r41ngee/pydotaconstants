@@ -7,13 +7,13 @@ import os
 def _update():
     with open("src/pydotaconstants/source_vdf/npc_heroes.txt") as rf:
         data = vdf2.load(rf)
-    heroes: dict = deepcopy(data["DOTAHeroes"])
-    for hero in heroes:
-        if hero in ["Version", "npc_dota_hero_base"]:
-            data["DOTAHeroes"].pop(hero)
-            continue
+        heroes: dict = deepcopy(data["DOTAHeroes"])
 
-    heroes = dict(sorted(heroes.items()))
+        for hero in list(heroes):
+            if hero in ["Version", "npc_dota_hero_base"]:
+                heroes.pop(hero)
+
+        heroes = dict(sorted(heroes.items()))
     
     with open("src/pydotaconstants/data/heroes.json", "w") as wf:
         json.dump(heroes, wf, indent=4)
@@ -23,9 +23,9 @@ def _update():
     with open("src/pydotaconstants/source_vdf/items.txt") as rf:
         data = vdf2.load(rf)
     items: dict = deepcopy(data["DOTAAbilities"])
-    for item in items:
+    for item in list(items):
         if item in ["Version", "npc_dota_hero_base"]:
-            data["DOTAAbilities"].pop(item)
+            items.pop(item)
             continue
 
     items = dict(sorted(items.items()))
