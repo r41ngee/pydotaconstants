@@ -1,6 +1,6 @@
 [project]
 name = "pydotaconstants"
-version = "1.1.2.post11"
+version = "1.1.2.post12"
 description = "DOTA 2 constant parses"
 readme = "README.md"
 authors = [
