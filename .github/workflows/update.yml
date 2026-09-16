@@ -64,8 +64,6 @@ jobs:
 
                     BASE="https://raw.githubusercontent.com/dotabuff/d2vpkr/master/dota"
 
-                    curl -sL -o src/pydotaconstants/source_vdf/npc_heroes.txt \
-                        "$BASE/scripts/npc/npc_heroes.txt"
                     curl -sL -o src/pydotaconstants/source_vdf/items.txt \
                         "$BASE/scripts/npc/items.txt"
 
@@ -87,7 +85,7 @@ jobs:
             - name: Install dependencies
               run: uv sync
             - name: Run update script
-              run: uv run python src/pydotaconstants/_update.py
+              run: uv run python scripts/_update.py
             - name: Validate build output
               run: |
                     set -euo pipefail
