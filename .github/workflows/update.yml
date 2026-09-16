@@ -76,7 +76,7 @@ jobs:
                         | jq -r '.[].download_url' \
                         | while read -r url; do
                             name=$(basename "$url")
-                            curl -sL -o "src/pydotaconstants/source_vdf/abilities/$name" "$url"
+                            curl -sL -o "src/pydotaconstants/source_vdf/heroes/$name" "$url"
                         done
             - name: Setup uv
               uses: astral-sh/setup-uv@v5
