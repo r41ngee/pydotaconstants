@@ -5,60 +5,22 @@ import pickle
 import os
 
 def _update():
-    with open("src/pydotaconstants/source_vdf/npc_heroes.txt") as rf:
-        data = vdf2.load(rf)
-        heroes: dict = deepcopy(data["DOTAHeroes"])
+    ALLHERO = {}
+    ALLABILITIES = {}
 
-        for hero in list(heroes):
-            if hero in ["Version", "npc_dota_hero_base"]:
-                heroes.pop(hero)
+    for file in os.listdir("src/pydotaconstants/source_vdf/heroes/"):
+        with open(f"src/pydotaconstants/source_vdf/heroes/{file}") as rf:
+            data = vdf2.load(rf)["DOTAHeroes"]
 
-        heroes = dict(sorted(heroes.items()))
-    
-    with open("src/pydotaconstants/data/heroes.json", "w") as wf:
-        json.dump(heroes, wf, indent=4)
-    with open("src/pydotaconstants/data/heroes.pkl", "wb") as pkl_f:
-        pickle.dump(heroes, pkl_f)
+            # MEEPO AINT FIXED ANYWAY :)
+            if file == "npc_dota_hero_meepo":
+                fixing: dict = data["npc_dota_hero_meepo"]["AbilityDefinitions"]
+                fixing.pop("AbilityCastPoint")
+                fixing.pop("AbilityCastAnimation")
 
-    with open("src/pydotaconstants/source_vdf/items.txt") as rf:
-        data = vdf2.load(rf)
-    items: dict = deepcopy(data["DOTAAbilities"])
-    for item in list(items):
-        if item in ["Version", "npc_dota_hero_base"]:
-            items.pop(item)
-            continue
-
-    items = dict(sorted(items.items()))
-    
-    with open("src/pydotaconstants/data/items.json", "w") as wf:
-        json.dump(items, wf, indent=4)
-    with open("src/pydotaconstants/data/items.pkl", "wb") as pkl_f:
-        pickle.dump(items, pkl_f)
-
-    # ABILITIES
-    ABT_DIR = "src/pydotaconstants/source_vdf/abilities/"
-    ability_files = os.listdir(ABT_DIR)
-
-    ability_alldata = {}
-
-    for file in ability_files:
-        with open(ABT_DIR + file) as rf:
-            data = vdf2.load(rf)["DOTAAbilities"]
-        for ability in deepcopy(data):
-            # WAIT FOR FIX RANDOM KEYS IN npc_dota_hero_meepo
-            # I <3 GABEN
-            if ability == "Version" or ability == "AbilityCastPoint" or ability == "AbilityCastAnimation":
-                data.pop(ability)
-                continue
-
-        ability_alldata.update(data)
-
-    ability_alldata = dict(sorted(ability_alldata.items()))
-
-    with open("src/pydotaconstants/data/abilities.json", "w") as wf:
-        json.dump(ability_alldata, wf, indent=4)
-    with open("src/pydotaconstants/data/abilities.pkl", "wb") as wf:
-        pickle.dump(ability_alldata, wf)
+            abilities = data[file].pop("AbilityDefinitions")
+            ALLHERO[file] = data[file]
+            ALLABILITIES[file] = abilities
 
     # LOCALIZATION
     LOCALS_DIR = "src/pydotaconstants/source_vdf/locals/"
@@ -78,6 +40,22 @@ def _update():
         json.dump(locals_alldata, wf, indent=4, ensure_ascii=False)
     with open("src/pydotaconstants/data/locals.pkl", "wb") as wf:
         pickle.dump(locals_alldata, wf)
+
+    with open("src/pydotaconstants/source_vdf/items.txt") as rf:
+        data = vdf2.load(rf)
+    items: dict = deepcopy(data["DOTAAbilities"])
+    for item in list(items):
+        if item in ["Version"]:
+            items.pop(item)
+            continue
+
+    # ITEMS
+    items = dict(sorted(items.items()))
+    
+    with open("src/pydotaconstants/data/items.json", "w") as wf:
+        json.dump(items, wf, indent=4)
+    with open("src/pydotaconstants/data/items.pkl", "wb") as pkl_f:
+        pickle.dump(items, pkl_f)
 
 if __name__ == "__main__":
     _update()
