@@ -12,33 +12,45 @@ def _update():
     print(f"[update] found {len(hero_files)} hero files")
 
     for file in hero_files:
-        print(f"[update] processing hero: {file}")
-        with open(f"src/pydotaconstants/source_vdf/heroes/{file}") as rf:
+        name = os.path.splitext(file)[0]
+        print(f"[update] processing hero: {name}")
+        with open(f"src/pydotaconstants/source_vdf/heroes/{file}", encoding="utf-8") as rf:
             data = vdf2.load(rf)["DOTAHeroes"]
+            hero_data = data.get(name)
+
+            if hero_data is None:
+                print(f"[update] warning: hero block not found for {name}, skipping")
+                continue
 
             # MEEPO AINT FIXED ANYWAY :)
-            if file == "npc_dota_hero_meepo":
-                fixing: dict = data["npc_dota_hero_meepo"]["AbilityDefinitions"]
-                fixing.pop("AbilityCastPoint")
-                fixing.pop("AbilityCastAnimation")
+            if name == "npc_dota_hero_meepo":
+                fixing: dict = hero_data.get("AbilityDefinitions", {})
+                fixing.pop("AbilityCastPoint", None)
+                fixing.pop("AbilityCastAnimation", None)
 
-            abilities = data[file].pop("AbilityDefinitions")
-            ALLHERO[file] = data[file]
-            ALLABILITIES[file] = abilities
+            abilities = hero_data.pop("AbilityDefinitions", {})
+            ALLHERO[name] = hero_data
 
-        
+            for ability_name, ability_data in abilities.items():
+                cleaned_ability = dict(ability_data)
+                cleaned_ability["owner"] = name
+                ALLABILITIES[ability_name] = cleaned_ability
 
-        print(f"[update] hero processed: {file}")
+        print(f"[update] hero processed: {name}")
 
     print(f"[update] heroes loaded: {len(ALLHERO)}")
 
-    ALLHERO = dict(sorted(ALLHERO))
+    ALLHERO = dict(sorted(ALLHERO.items()))
     with open("src/pydotaconstants/data/heroes.json", "w", encoding="utf-8") as wf:
-        vdf2.dump(ALLHERO, wf)
+        json.dump(ALLHERO, wf, indent=4)
+    with open("src/pydotaconstants/data/heroes.pkl", "wb") as wf:
+        pickle.dump(ALLHERO, wf)
 
-    ALLABILITIES = dict(sorted(ALLABILITIES))
-    with open("src/pydotaconstants/data/abilities.json", "w", encoding = "utf-8") as wf:
-        vdf2.dump(ALLABILITIES, wf)
+    ALLABILITIES = dict(sorted(ALLABILITIES.items()))
+    with open("src/pydotaconstants/data/abilities.json", "w", encoding="utf-8") as wf:
+        json.dump(ALLABILITIES, wf, indent=4)
+    with open("src/pydotaconstants/data/abilities.pkl", "wb") as wf:
+        pickle.dump(ALLABILITIES, wf)
 
     # LOCALIZATION
     LOCALS_DIR = "src/pydotaconstants/source_vdf/locals/"
